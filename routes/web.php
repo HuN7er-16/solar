@@ -143,9 +143,9 @@ Route::get('migrate-catalogs', function(){
         // base_path('packages/contractor-catalog/src/Database/Migrations'),
         // base_path('packages/solar-plant-equipment/src/Database/Migrations'),
         // base_path('packages/inspector-catalog/src/Database/Migrations'),
-        // base_path('packages/project-inspection/src/Database/Migrations'),
-        // base_path('packages/expert-catalog/src/Database/Migrations'),
-        // base_path('packages/request-expert-review/src/Database/Migrations'),
+        base_path('packages/project-inspection/src/Database/Migrations'),
+        base_path('packages/expert-catalog/src/Database/Migrations'),
+        base_path('packages/request-expert-review/src/Database/Migrations'),
         base_path('packages/expert-initial-visit/src/Database/Migrations'),
     ];
 
