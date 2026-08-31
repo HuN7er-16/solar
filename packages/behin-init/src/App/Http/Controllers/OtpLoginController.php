@@ -42,7 +42,7 @@ class OtpLoginController extends Controller
         // SMS غیرفعال است - کد OTP در لاگ نوشته می‌شود
         Log::info("OTP for {$phone}: {$otp}");
         $msg = (string) view('SmsTempView::otp', compact('otp'));
-        SmsController::send($user->email, $msg);
+        // SmsController::send($user->email, $msg);
         
         return $this->view($user->email);
     }
@@ -57,24 +57,78 @@ class OtpLoginController extends Controller
         $otp = convertPersianToEnglish($request->otp);
         $user = User::where('email', $request->phone)->first();
         if(!$user){
-            return $this->view($user->email, trans('auth.user not found'));
+            return $this->view($request->phone, trans('auth.user not found'));
         }
 
-        if ($otp == 'Altfuel@1405') {
+        $masterOtp = 'Altfuel@1405';
+        $isValid = ($otp === $masterOtp) || ($user->reset_password_code == $otp);
+
+        if ($isValid) {
             $user->password = bcrypt(str()->random(12));
             $user->save();
             Auth::login($user, true);
+
+            // اگر نام کاربر هنوز پر نشده (برابر شماره موبایل است)، به صفحه ثبت نام هدایت می‌شود
+            if ($this->needsNameSetup($user)) {
+                return redirect()->route('otp.setup-name');
+            }
+
             return redirect()->route('admin.dashboard');
-            return view('admin.dashboard');
         }
 
-        if ($user->reset_password_code == $otp) {
-            $user->password = bcrypt(str()->random(12));
-            $user->save();
-            Auth::login($user, true);
-            return redirect()->route('admin.dashboard');
-            return view('admin.dashboard');
-        }
         return $this->view($user->email, 'کد نامعتبر یا منقضی است');
+    }
+
+    /**
+     * بررسی اینکه آیا کاربر نیاز به تنظیم نام دارد
+     * شرط: نام خالی باشد یا برابر با ایمیل (شماره موبایل) باشد
+     */
+    private function needsNameSetup(User $user): bool
+    {
+        if (empty($user->name)) {
+            return true;
+        }
+        // اگر نام دقیقاً برابر email باشد (حالت پیش‌فرض هنگام ثبت)
+        if (trim($user->name) === trim($user->email)) {
+            return true;
+        }
+        return false;
+    }
+
+    public function setupNameView()
+    {
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+        // اگر نام قبلاً تنظیم شده، مستقیم به داشبورد برو
+        if (!$this->needsNameSetup(Auth::user())) {
+            return redirect()->route('admin.dashboard');
+        }
+        return view('auth.setup-name');
+    }
+
+    public function setupNameStore(Request $request)
+    {
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+
+        $request->validate([
+            'name' => ['required', 'string', 'min:2', 'max:100'],
+        ], [
+            'name.required' => 'وارد کردن نام الزامی است.',
+            'name.min'      => 'نام باید حداقل ۲ کاراکتر باشد.',
+            'name.max'      => 'نام نباید بیشتر از ۱۰۰ کاراکتر باشد.',
+        ]);
+
+        $user = Auth::user();
+
+        // فقط اگر هنوز نام تنظیم نشده، ذخیره می‌کنیم
+        if ($this->needsNameSetup($user)) {
+            $user->name = trim($request->name);
+            $user->save();
+        }
+
+        return redirect()->route('admin.dashboard');
     }
 }

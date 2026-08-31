@@ -21,6 +21,34 @@ class StoreSolarPlantRequestRequest extends FormRequest
         return true;
     }
 
+    /** تبدیل ارقام فارسی/عربی به انگلیسی قبل از اعتبارسنجی */
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'mobile'          => $this->toEnglishDigits($this->input('mobile')),
+            'landline'        => $this->toEnglishDigits($this->input('landline')),
+            'national_code'   => $this->toEnglishDigits($this->input('national_code')),
+            'immigration_code'=> $this->toEnglishDigits($this->input('immigration_code')),
+            'bill_identifier' => $this->toEnglishDigits($this->input('bill_identifier')),
+            'postal_code'     => $this->toEnglishDigits($this->input('postal_code')),
+        ]);
+    }
+
+    private function toEnglishDigits(mixed $value): ?string
+    {
+        if ($value === null) {
+            return null;
+        }
+
+        $value = trim((string) $value);
+
+        return str_replace(
+            ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹', '٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'],
+            ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
+            $value
+        );
+    }
+
     public function rules(): array
     {
         $applicantType = $this->input('applicant_type');
@@ -29,8 +57,8 @@ class StoreSolarPlantRequestRequest extends FormRequest
             // Applicant info
             'applicant_type' => ['required', 'string', 'in:individual,company,foreigner'],
             'mobile' => ['required', 'digits:11'],
-            'landline' => ['nullable', 'string', 'max:20'],
-            'bill_identifier' => ['nullable', 'string', 'max:255'],
+            'landline' => ['nullable', 'digits:11'],
+            'bill_identifier' => ['nullable', 'digits:13'],
 
             // Installation location
             'province' => ['required', 'string', 'max:100', 'in:' . implode(',', self::IRAN_PROVINCES)],
@@ -60,18 +88,18 @@ class StoreSolarPlantRequestRequest extends FormRequest
             $rules['last_name'] = ['required', 'string', 'max:255'];
             $rules['national_code'] = ['required', 'digits:10'];
             $rules['mobile'] = ['required', 'digits:11'];
-            $rules['bill_identifier'] = ['required', 'string', 'max:255'];
+            $rules['bill_identifier'] = ['required', 'digits:13'];
         } elseif ($applicantType === ApplicantType::COMPANY->value) {
             $rules['company_name'] = ['required', 'string', 'max:255'];
             $rules['registration_number'] = ['required', 'string', 'max:50'];
             $rules['mobile'] = ['required', 'digits:11'];
-            $rules['bill_identifier'] = ['required', 'string', 'max:255'];
+            $rules['bill_identifier'] = ['required', 'digits:13'];
         } elseif ($applicantType === ApplicantType::FOREIGNER->value) {
             $rules['first_name'] = ['required', 'string', 'max:255'];
             $rules['last_name'] = ['required', 'string', 'max:255'];
-            $rules['immigration_code'] = ['required', 'string', 'max:20'];
+            $rules['immigration_code'] = ['required', 'digits:10'];
             $rules['mobile'] = ['required', 'digits:11'];
-            $rules['bill_identifier'] = ['required', 'string', 'max:255'];
+            $rules['bill_identifier'] = ['required', 'digits:13'];
         }
 
         return $rules;
@@ -90,29 +118,30 @@ class StoreSolarPlantRequestRequest extends FormRequest
             'last_name.required'           => 'وارد کردن نام خانوادگی الزامی است.',
             'last_name.max'                => 'نام خانوادگی نمی‌تواند بیش از ۲۵۵ کاراکتر باشد.',
             'national_code.required'       => 'وارد کردن کد ملی الزامی است.',
-            'national_code.max'            => 'کد ملی نمی‌تواند بیش از ۱۰ رقم باشد.',
+            'national_code.digits'         => 'کد ملی باید ۱۰ رقم و به صورت عدد باشد.',
 
             // company
             'company_name.required'        => 'وارد کردن نام شرکت الزامی است.',
             'registration_number.required' => 'وارد کردن شماره ثبت شرکت الزامی است.',
-            'ceo_national_id.required'     => 'وارد کردن شناسه مدیر عامل الزامی است.',
-            'ceo_national_id.max'          => 'شناسه مدیر عامل نمی‌تواند بیش از ۱۰ رقم باشد.',
+            'registration_number.max'      => 'شماره ثبت شرکت نمی‌تواند بیش از ۵۰ کاراکتر باشد.',
 
             // foreigner
             'immigration_code.required'    => 'وارد کردن کد اتباع الزامی است.',
+            'immigration_code.digits'      => 'کد اتباع باید ۱۰ رقم و به صورت عدد باشد.',
 
             // common applicant
             'mobile.required'              => 'وارد کردن شماره موبایل الزامی است.',
-            'mobile.digits'                   => 'شماره موبایل باید 11 رقم باشد.',
+            'mobile.digits'                   => 'شماره تلفن باید ۱۱ رقم و به صورت عدد باشد.',
+            'landline.digits'              => 'تلفن ثابت باید ۱۱ رقم و به صورت عدد باشد.',
             'bill_identifier.required'     => 'وارد کردن شناسه قبض برق الزامی است.',
-            'bill_identifier.max'          => 'شناسه قبض برق نمی‌تواند بیش از ۲۵۵ کاراکتر باشد.',
+            'bill_identifier.digits'       => 'شناسه قبض برق باید ۱۳ رقم و به صورت عدد باشد.',
 
             // location
             'province.required'            => 'لطفاً استان را از لیست انتخاب کنید.',
             'province.in'                  => 'استان انتخاب‌شده معتبر نیست. لطفاً استان را از لیست انتخاب کنید.',
             'city.required'                => 'لطفاً نام شهر را وارد کنید.',
             'postal_code.required'         => 'وارد کردن کد پستی الزامی است.',
-            'postal_code.digits'              => 'کد پستی باید 10 رقم باشد',
+            'postal_code.digits'              => 'کد پستی باید ۱۰ رقم و به صورت عدد باشد.',
             'address.required'             => 'وارد کردن آدرس دقیق الزامی است.',
 
             // technical
@@ -132,12 +161,12 @@ class StoreSolarPlantRequestRequest extends FormRequest
             'wants_loan.required'          => 'لطفاً مشخص کنید تمایل به دریافت وام دارید یا خیر.',
             'description.max'              => 'توضیحات نمی‌تواند بیش از ۲۰۰۰ کاراکتر باشد.',
             'images.array'                 => 'فرمت تصاویر نامعتبر است.',
-            'images.max'                   => 'حداکثر ۱۰ تصویر مجاز است.',
+            'images.max'                   => 'حداکثر ۴ تصویر مجاز است.',
             'images.*.file'                => 'هر آیتم باید یک فایل معتبر باشد.',
             'images.*.mimes'               => 'فرمت تصاویر باید JPG یا PNG باشد.',
             'images.*.max'                 => 'حجم هر تصویر نمی‌تواند بیش از ۵ مگابایت باشد.',
             'documents.array'              => 'فرمت مدارک نامعتبر است.',
-            'documents.max'                => 'حداکثر ۱۰ فایل مدرک مجاز است.',
+            'documents.max'                => 'حداکثر ۴ فایل مدرک مجاز است.',
             'documents.*.file'             => 'هر آیتم باید یک فایل معتبر باشد.',
             'documents.*.mimes'            => 'فرمت مدارک باید JPG، PNG یا PDF باشد.',
             'documents.*.max'              => 'حجم هر فایل مدرک نمی‌تواند بیش از ۵ مگابایت باشد.',
@@ -154,7 +183,6 @@ class StoreSolarPlantRequestRequest extends FormRequest
             'national_code'     => 'کد ملی',
             'company_name'      => 'نام شرکت',
             'registration_number' => 'شماره ثبت شرکت',
-            'ceo_national_id'   => 'شناسه مدیر عامل',
             'immigration_code'  => 'کد اتباع',
             'landline'          => 'تلفن ثابت',
             'bill_identifier'   => 'شناسه قبض برق',

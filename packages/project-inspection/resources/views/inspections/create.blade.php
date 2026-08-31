@@ -363,10 +363,11 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="visit_date" style="font-weight:700; color:#1B5E20;">تاریخ بازدید <span class="text-danger">*</span></label>
-                                <input type="date" name="visit_date" id="visit_date"
+                                <input type="text" name="visit_date" id="visit_date"
                                        class="form-control persian-date form-input-custom @error('visit_date') is-invalid @enderror"
                                        style="border-radius:10px;"
-                                       value="{{ old('visit_date', date('Y-m-d')) }}" required>
+                                       placeholder="مثال: ۱۴۰۳/۰۱/۰۱"
+                                       value="{{ old('visit_date') }}" required>
                                 @error('visit_date')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror

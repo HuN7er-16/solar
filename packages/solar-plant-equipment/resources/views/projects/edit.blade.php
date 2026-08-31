@@ -373,18 +373,20 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="installation_start_date">تاریخ شروع نصب</label>
-                                        <input type="date" name="installation_start_date" id="installation_start_date"
-                                               class="form-control @error('installation_start_date') is-invalid @enderror"
-                                               value="{{ old('installation_start_date', optional($project->installation_start_date)->toDateString()) }}">
+                                        <input type="text" name="installation_start_date" id="installation_start_date"
+                                               class="form-control persian-date @error('installation_start_date') is-invalid @enderror"
+                                               placeholder="مثال: ۱۴۰۳/۰۱/۰۱"
+                                               value="{{ old('installation_start_date', $project->installation_start_date ? toJalaliFormatted($project->installation_start_date, 'Y/m/d') : '') }}">
                                         @error('installation_start_date') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="installation_end_date">تاریخ پایان نصب</label>
-                                        <input type="date" name="installation_end_date" id="installation_end_date"
-                                               class="form-control @error('installation_end_date') is-invalid @enderror"
-                                               value="{{ old('installation_end_date', optional($project->installation_end_date)->toDateString()) }}">
+                                        <input type="text" name="installation_end_date" id="installation_end_date"
+                                               class="form-control persian-date @error('installation_end_date') is-invalid @enderror"
+                                               placeholder="مثال: ۱۴۰۳/۰۶/۳۱"
+                                               value="{{ old('installation_end_date', $project->installation_end_date ? toJalaliFormatted($project->installation_end_date, 'Y/m/d') : '') }}">
                                         @error('installation_end_date') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                     </div>
                                 </div>
@@ -393,9 +395,10 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="commissioning_date">تاریخ بهره برداری</label>
-                                        <input type="date" name="commissioning_date" id="commissioning_date"
-                                               class="form-control @error('commissioning_date') is-invalid @enderror"
-                                               value="{{ old('commissioning_date', optional($project->commissioning_date)->toDateString()) }}">
+                                        <input type="text" name="commissioning_date" id="commissioning_date"
+                                               class="form-control persian-date @error('commissioning_date') is-invalid @enderror"
+                                               placeholder="مثال: ۱۴۰۳/۰۷/۰۱"
+                                               value="{{ old('commissioning_date', $project->commissioning_date ? toJalaliFormatted($project->commissioning_date, 'Y/m/d') : '') }}">
                                         @error('commissioning_date') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                     </div>
                                 </div>
@@ -482,18 +485,20 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="health_card_issue_date">تاریخ صدور گواهی سلامت</label>
-                                <input type="date" name="health_card_issue_date" id="health_card_issue_date"
-                                       class="form-control @error('health_card_issue_date') is-invalid @enderror"
-                                       value="{{ old('health_card_issue_date', optional($project->health_card_issue_date)->toDateString()) }}">
+                                <input type="text" name="health_card_issue_date" id="health_card_issue_date"
+                                       class="form-control persian-date @error('health_card_issue_date') is-invalid @enderror"
+                                       placeholder="مثال: ۱۴۰۳/۰۱/۰۱"
+                                       value="{{ old('health_card_issue_date', $project->health_card_issue_date ? toJalaliFormatted($project->health_card_issue_date, 'Y/m/d') : '') }}">
                                 @error('health_card_issue_date') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="health_card_expiry_date">تاریخ انقضای گواهی سلامت</label>
-                                <input type="date" name="health_card_expiry_date" id="health_card_expiry_date"
-                                       class="form-control @error('health_card_expiry_date') is-invalid @enderror"
-                                       value="{{ old('health_card_expiry_date', optional($project->health_card_expiry_date)->toDateString()) }}">
+                                <input type="text" name="health_card_expiry_date" id="health_card_expiry_date"
+                                       class="form-control persian-date @error('health_card_expiry_date') is-invalid @enderror"
+                                       placeholder="مثال: ۱۴۰۵/۰۱/۰۱"
+                                       value="{{ old('health_card_expiry_date', $project->health_card_expiry_date ? toJalaliFormatted($project->health_card_expiry_date, 'Y/m/d') : '') }}">
                                 @error('health_card_expiry_date') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                         </div>

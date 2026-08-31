@@ -109,6 +109,17 @@
             </div>
         @endif
 
+        {{-- Client-side Error Display --}}
+        <div id="client-errors" class="hidden mb-6 rounded-lg bg-red-50 border border-red-300 text-red-800 px-4 py-4 text-sm">
+            <div class="flex items-center gap-2 font-semibold mb-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+                </svg>
+                لطفاً موارد زیر را تصحیح کنید:
+            </div>
+            <ul class="list-disc pr-5 space-y-1"></ul>
+        </div>
+
         {{-- Success Message --}}
         @if (session('status'))
             <div class="mb-6 rounded-lg bg-green-100 text-green-800 px-4 py-3 text-sm">
@@ -153,38 +164,46 @@
                 {{-- Individual Fields --}}
                 <div id="fields-individual" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="space-y-1">
-                        <label class="block text-sm font-medium text-gray-700">نام</label>
-                        <input type="text" name="first_name" value="{{ old('first_name') }}"
+                        <label class="block text-sm font-medium text-gray-700">نام <span class="text-red-500">*</span></label>
+                        <input type="text" name="first_name" value="{{ old('first_name') }}" required data-label="نام"
                             class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500 @error('first_name') border-red-500 @enderror">
                         @error('first_name') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
                     <div class="space-y-1">
-                        <label class="block text-sm font-medium text-gray-700">نام خانوادگی</label>
-                        <input type="text" name="last_name" value="{{ old('last_name') }}"
+                        <label class="block text-sm font-medium text-gray-700">نام خانوادگی <span class="text-red-500">*</span></label>
+                        <input type="text" name="last_name" value="{{ old('last_name') }}" required data-label="نام خانوادگی"
                             class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500 @error('last_name') border-red-500 @enderror">
                         @error('last_name') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
                     <div class="space-y-1">
-                        <label class="block text-sm font-medium text-gray-700">کد ملی</label>
+                        <label class="block text-sm font-medium text-gray-700">کد ملی <span class="text-red-500">*</span></label>
                         <input type="text" name="national_code" value="{{ old('national_code') }}" dir="ltr" inputmode="numeric" maxlength="10"
+                            required data-label="کد ملی" data-digits-only pattern="\d{10}"
+                            data-pattern-error="کد ملی باید ۱۰ رقم و به صورت عدد باشد."
                             class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500 @error('national_code') border-red-500 @enderror">
                         @error('national_code') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
                     <div class="space-y-1">
-                        <label class="block text-sm font-medium text-gray-700">شناسه قبض برق</label>
-                        <input type="text" name="bill_identifier" value="{{ old('bill_identifier') }}" dir="ltr"
+                        <label class="block text-sm font-medium text-gray-700">شناسه قبض برق <span class="text-red-500">*</span></label>
+                        <input type="text" name="bill_identifier" value="{{ old('bill_identifier') }}" dir="ltr" inputmode="numeric" maxlength="13"
+                            required data-label="شناسه قبض برق" data-digits-only pattern="\d{13}"
+                            data-pattern-error="شناسه قبض باید ۱۳ رقم و به صورت عدد باشد."
                             class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500 @error('bill_identifier') border-red-500 @enderror">
                         @error('bill_identifier') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
                     <div class="space-y-1">
-                        <label class="block text-sm font-medium text-gray-700">شماره موبایل</label>
-                        <input type="text" name="mobile" value="{{ old('mobile') }}" dir="ltr" inputmode="tel"
+                        <label class="block text-sm font-medium text-gray-700">شماره موبایل <span class="text-red-500">*</span></label>
+                        <input type="text" name="mobile" value="{{ old('mobile') }}" dir="ltr" inputmode="numeric" maxlength="11"
+                            required data-label="شماره موبایل" data-digits-only pattern="\d{11}"
+                            data-pattern-error="شماره تلفن باید ۱۱ رقم و به صورت عدد باشد."
                             class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500 @error('mobile') border-red-500 @enderror">
                         @error('mobile') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
                     <div class="space-y-1">
                         <label class="block text-sm font-medium text-gray-700">تلفن ثابت (اختیاری)</label>
-                        <input type="text" name="landline" value="{{ old('landline') }}" dir="ltr"
+                        <input type="text" name="landline" value="{{ old('landline') }}" dir="ltr" inputmode="numeric" maxlength="11"
+                            data-label="تلفن ثابت" data-digits-only pattern="\d{11}"
+                            data-pattern-error="تلفن ثابت باید ۱۱ رقم و به صورت عدد باشد."
                             class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500">
                     </div>
                 </div>
@@ -192,32 +211,38 @@
                 {{-- Company Fields (disabled by default, enabled by JS when selected) --}}
                 <div id="fields-company" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="space-y-1">
-                        <label class="block text-sm font-medium text-gray-700">نام شرکت</label>
-                        <input type="text" name="company_name" value="{{ old('company_name') }}" disabled
+                        <label class="block text-sm font-medium text-gray-700">نام شرکت <span class="text-red-500">*</span></label>
+                        <input type="text" name="company_name" value="{{ old('company_name') }}" disabled required data-label="نام شرکت"
                             class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500 @error('company_name') border-red-500 @enderror">
                         @error('company_name') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
                     <div class="space-y-1">
-                        <label class="block text-sm font-medium text-gray-700">شماره ثبت شرکت</label>
-                        <input type="text" name="registration_number" value="{{ old('registration_number') }}" dir="ltr" disabled
+                        <label class="block text-sm font-medium text-gray-700">شماره ثبت شرکت <span class="text-red-500">*</span></label>
+                        <input type="text" name="registration_number" value="{{ old('registration_number') }}" dir="ltr" disabled required data-label="شماره ثبت شرکت"
                             class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500 @error('registration_number') border-red-500 @enderror">
                         @error('registration_number') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
                     <div class="space-y-1">
-                        <label class="block text-sm font-medium text-gray-700" >شماره موبایل مدیرعامل</label>
-                        <input type="text" name="mobile" value="{{ old('mobile') }}" dir="ltr" inputmode="tel" disabled
+                        <label class="block text-sm font-medium text-gray-700">شماره موبایل مدیرعامل <span class="text-red-500">*</span></label>
+                        <input type="text" name="mobile" value="{{ old('mobile') }}" dir="ltr" inputmode="numeric" maxlength="11" disabled
+                            required data-label="شماره موبایل" data-digits-only pattern="\d{11}"
+                            data-pattern-error="شماره تلفن باید ۱۱ رقم و به صورت عدد باشد."
                             class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500 @error('mobile') border-red-500 @enderror">
                         @error('mobile') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
                     <div class="space-y-1">
-                        <label class="block text-sm font-medium text-gray-700">شناسه قبض برق</label>
-                        <input type="text" name="bill_identifier" value="{{ old('bill_identifier') }}" dir="ltr" disabled
+                        <label class="block text-sm font-medium text-gray-700">شناسه قبض برق <span class="text-red-500">*</span></label>
+                        <input type="text" name="bill_identifier" value="{{ old('bill_identifier') }}" dir="ltr" inputmode="numeric" maxlength="13" disabled
+                            required data-label="شناسه قبض برق" data-digits-only pattern="\d{13}"
+                            data-pattern-error="شناسه قبض باید ۱۳ رقم و به صورت عدد باشد."
                             class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500 @error('bill_identifier') border-red-500 @enderror">
                         @error('bill_identifier') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
                     <div class="space-y-1">
                         <label class="block text-sm font-medium text-gray-700">تلفن ثابت (اختیاری)</label>
-                        <input type="text" name="landline" value="{{ old('landline') }}" dir="ltr" disabled
+                        <input type="text" name="landline" value="{{ old('landline') }}" dir="ltr" inputmode="numeric" maxlength="11" disabled
+                            data-label="تلفن ثابت" data-digits-only pattern="\d{11}"
+                            data-pattern-error="تلفن ثابت باید ۱۱ رقم و به صورت عدد باشد."
                             class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500">
                     </div>
                 </div>
@@ -225,38 +250,46 @@
                 {{-- Foreigner Fields (disabled by default, enabled by JS when selected) --}}
                 <div id="fields-foreigner" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="space-y-1">
-                        <label class="block text-sm font-medium text-gray-700">نام</label>
-                        <input type="text" name="first_name" value="{{ old('first_name') }}" disabled
+                        <label class="block text-sm font-medium text-gray-700">نام <span class="text-red-500">*</span></label>
+                        <input type="text" name="first_name" value="{{ old('first_name') }}" disabled required data-label="نام"
                             class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500 @error('first_name') border-red-500 @enderror">
                         @error('first_name') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
                     <div class="space-y-1">
-                        <label class="block text-sm font-medium text-gray-700">نام خانوادگی</label>
-                        <input type="text" name="last_name" value="{{ old('last_name') }}" disabled
+                        <label class="block text-sm font-medium text-gray-700">نام خانوادگی <span class="text-red-500">*</span></label>
+                        <input type="text" name="last_name" value="{{ old('last_name') }}" disabled required data-label="نام خانوادگی"
                             class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500 @error('last_name') border-red-500 @enderror">
                         @error('last_name') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
                     <div class="space-y-1">
-                        <label class="block text-sm font-medium text-gray-700">کد اتباع</label>
-                        <input type="text" name="immigration_code" value="{{ old('immigration_code') }}" dir="ltr" disabled
+                        <label class="block text-sm font-medium text-gray-700">کد اتباع <span class="text-red-500">*</span></label>
+                        <input type="text" name="immigration_code" value="{{ old('immigration_code') }}" dir="ltr" inputmode="numeric" maxlength="10" disabled
+                            required data-label="کد اتباع" data-digits-only pattern="\d{10}"
+                            data-pattern-error="کد اتباع باید ۱۰ رقم و به صورت عدد باشد."
                             class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500 @error('immigration_code') border-red-500 @enderror">
                         @error('immigration_code') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
                     <div class="space-y-1">
-                        <label class="block text-sm font-medium text-gray-700">شناسه قبض برق</label>
-                        <input type="text" name="bill_identifier" value="{{ old('bill_identifier') }}" dir="ltr" disabled
+                        <label class="block text-sm font-medium text-gray-700">شناسه قبض برق <span class="text-red-500">*</span></label>
+                        <input type="text" name="bill_identifier" value="{{ old('bill_identifier') }}" dir="ltr" inputmode="numeric" maxlength="13" disabled
+                            required data-label="شناسه قبض برق" data-digits-only pattern="\d{13}"
+                            data-pattern-error="شناسه قبض باید ۱۳ رقم و به صورت عدد باشد."
                             class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500 @error('bill_identifier') border-red-500 @enderror">
                         @error('bill_identifier') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
                     <div class="space-y-1">
-                        <label class="block text-sm font-medium text-gray-700">شماره موبایل</label>
-                        <input type="text" name="mobile" value="{{ old('mobile') }}" dir="ltr" inputmode="tel" disabled
+                        <label class="block text-sm font-medium text-gray-700">شماره موبایل <span class="text-red-500">*</span></label>
+                        <input type="text" name="mobile" value="{{ old('mobile') }}" dir="ltr" inputmode="numeric" maxlength="11" disabled
+                            required data-label="شماره موبایل" data-digits-only pattern="\d{11}"
+                            data-pattern-error="شماره تلفن باید ۱۱ رقم و به صورت عدد باشد."
                             class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500 @error('mobile') border-red-500 @enderror">
                         @error('mobile') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
                     <div class="space-y-1">
                         <label class="block text-sm font-medium text-gray-700">تلفن ثابت (اختیاری)</label>
-                        <input type="text" name="landline" value="{{ old('landline') }}" dir="ltr" disabled
+                        <input type="text" name="landline" value="{{ old('landline') }}" dir="ltr" inputmode="numeric" maxlength="11" disabled
+                            data-label="تلفن ثابت" data-digits-only pattern="\d{11}"
+                            data-pattern-error="تلفن ثابت باید ۱۱ رقم و به صورت عدد باشد."
                             class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500">
                     </div>
                 </div>
@@ -274,18 +307,12 @@
                 <h2 class="text-xl font-bold mb-6">محل نصب</h2>
 
                 @php
-                    $iranProvinces = [
-                        'آذربایجان شرقی', 'آذربایجان غربی', 'اردبیل', 'اصفهان', 'البرز', 'ایلام', 'بوشهر',
-                        'تهران', 'چهارمحال و بختیاری', 'خراسان جنوبی', 'خراسان رضوی', 'خراسان شمالی',
-                        'خوزستان', 'زنجان', 'سمنان', 'سیستان و بلوچستان', 'فارس', 'قزوین', 'قم',
-                        'کردستان', 'کرمان', 'کرمانشاه', 'کهگیلویه و بویراحمد', 'گلستان', 'گیلان',
-                        'لرستان', 'مازندران', 'مرکزی', 'هرمزگان', 'همدان', 'یزد'
-                    ];
+                    $iranProvinces = \SolarPlantRequests\Http\Requests\StoreSolarPlantRequestRequest::IRAN_PROVINCES;
                 @endphp
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="space-y-1">
-                        <label class="block text-sm font-medium text-gray-700">استان</label>
-                        <select name="province" id="province"
+                        <label class="block text-sm font-medium text-gray-700">استان <span class="text-red-500">*</span></label>
+                        <select name="province" id="province_select" required data-label="استان"
                             class="w-full border rounded-lg px-4 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-amber-500 @error('province') border-red-500 @enderror">
                             <option value="">-- لطفاً استان را انتخاب کنید --</option>
                             @foreach ($iranProvinces as $prov)
@@ -297,20 +324,24 @@
                         @error('province') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
                     <div class="space-y-1">
-                        <label class="block text-sm font-medium text-gray-700">شهر</label>
-                        <input type="text" name="city" value="{{ old('city') }}"
-                            class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500 @error('city') border-red-500 @enderror">
+                        <label class="block text-sm font-medium text-gray-700">شهر <span class="text-red-500">*</span></label>
+                        <select name="city" id="city_select" required data-label="شهر"
+                            class="w-full border rounded-lg px-4 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-amber-500 @error('city') border-red-500 @enderror">
+                            <option value="">ابتدا استان را انتخاب کنید</option>
+                        </select>
                         @error('city') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
                     <div class="space-y-1">
-                        <label class="block text-sm font-medium text-gray-700">کد پستی</label>
-                        <input type="text" name="postal_code" value="{{ old('postal_code') }}" dir="ltr" maxlength="10"
+                        <label class="block text-sm font-medium text-gray-700">کد پستی <span class="text-red-500">*</span></label>
+                        <input type="text" name="postal_code" value="{{ old('postal_code') }}" dir="ltr" inputmode="numeric" maxlength="10"
+                            required data-label="کد پستی" data-digits-only pattern="\d{10}"
+                            data-pattern-error="کد پستی باید ۱۰ رقم و به صورت عدد باشد."
                             class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500 @error('postal_code') border-red-500 @enderror">
                         @error('postal_code') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
                     <div class="space-y-1 md:col-span-2">
-                        <label class="block text-sm font-medium text-gray-700">آدرس دقیق</label>
-                        <textarea name="address" rows="3"
+                        <label class="block text-sm font-medium text-gray-700">آدرس دقیق <span class="text-red-500">*</span></label>
+                        <textarea name="address" rows="3" required data-label="آدرس دقیق"
                             class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500 @error('address') border-red-500 @enderror">{{ old('address') }}</textarea>
                         @error('address') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
@@ -334,8 +365,8 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="space-y-1">
-                        <label class="block text-sm font-medium text-gray-700">نوع کاربری</label>
-                        <select name="usage_type"
+                        <label class="block text-sm font-medium text-gray-700">نوع کاربری <span class="text-red-500">*</span></label>
+                        <select name="usage_type" required data-label="نوع کاربری"
                             class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500 @error('usage_type') border-red-500 @enderror">
                             <option value="">انتخاب کنید</option>
                             <option value="villa" {{ old('usage_type') === 'villa' ? 'selected' : '' }}>ویلایی</option>
@@ -348,7 +379,7 @@
                     </div>
 
                     <div class="space-y-1">
-                        <label class="block text-sm font-medium text-gray-700">نوع ملک مشاع؟</label>
+                        <label class="block text-sm font-medium text-gray-700">نوع ملک مشاع؟ <span class="text-red-500">*</span></label>
                         <div class="flex gap-4 mt-2">
                             <label class="flex items-center gap-2">
                                 <input type="radio" name="is_shared_property" value="1" {{ old('is_shared_property') == '1' ? 'checked' : '' }}
@@ -372,8 +403,8 @@
                     </div>
 
                     <div class="space-y-1">
-                        <label class="block text-sm font-medium text-gray-700">نوع سطح محل نصب</label>
-                        <select name="surface_type"
+                        <label class="block text-sm font-medium text-gray-700">نوع سطح محل نصب <span class="text-red-500">*</span></label>
+                        <select name="surface_type" required data-label="نوع سطح محل نصب"
                             class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500 @error('surface_type') border-red-500 @enderror">
                             <option value="">انتخاب کنید</option>
                             <option value="flat" {{ old('surface_type') === 'flat' ? 'selected' : '' }}>تخت</option>
@@ -385,8 +416,8 @@
                     </div>
 
                     <div class="space-y-1">
-                        <label class="block text-sm font-medium text-gray-700">هدف</label>
-                        <select name="purpose"
+                        <label class="block text-sm font-medium text-gray-700">هدف <span class="text-red-500">*</span></label>
+                        <select name="purpose" required data-label="هدف"
                             class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500 @error('purpose') border-red-500 @enderror">
                             <option value="">انتخاب کنید</option>
                             <option value="off_grid" {{ old('purpose') === 'off_grid' ? 'selected' : '' }}>مصرف شخصی (Off-grid)</option>
@@ -397,14 +428,14 @@
                     </div>
 
                     <div class="space-y-1">
-                        <label class="block text-sm font-medium text-gray-700">ظرفیت (کیلو وات)</label>
-                        <input type="number" name="capacity_kw" value="{{ old('capacity_kw') }}" min="1"
+                        <label class="block text-sm font-medium text-gray-700">ظرفیت (کیلو وات) <span class="text-red-500">*</span></label>
+                        <input type="number" name="capacity_kw" value="{{ old('capacity_kw') }}" min="1" required data-label="ظرفیت (کیلو وات)"
                             class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500 @error('capacity_kw') border-red-500 @enderror">
                         @error('capacity_kw') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
 
                     <div class="space-y-1">
-                        <label class="block text-sm font-medium text-gray-700">برق ۳ فاز دارید؟</label>
+                        <label class="block text-sm font-medium text-gray-700">برق ۳ فاز دارید؟ <span class="text-red-500">*</span></label>
                         <div class="flex gap-4 mt-2">
                             <label class="flex items-center gap-2">
                                 <input type="radio" name="has_three_phase" value="1" {{ old('has_three_phase') == '1' ? 'checked' : '' }}
@@ -421,7 +452,7 @@
                     </div>
 
                     <div class="space-y-1">
-                        <label class="block text-sm font-medium text-gray-700">تمایل به دریافت وام دارید؟</label>
+                        <label class="block text-sm font-medium text-gray-700">تمایل به دریافت وام دارید؟ <span class="text-red-500">*</span></label>
                         <div class="flex gap-4 mt-2">
                             <label class="flex items-center gap-2">
                                 <input type="radio" name="wants_loan" value="1" {{ old('wants_loan') == '1' ? 'checked' : '' }}
@@ -590,12 +621,83 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
+        // ---- Client-side validation ----
+        const digitChars = '۰۱۲۳۴۵۶۷۸۹٠١٢٣٤٥٦٧٨٩';
+
+        function normalizeDigits(value) {
+            return String(value || '').replace(/[۰-۹٠-٩]/g, function (d) {
+                return String(digitChars.indexOf(d));
+            });
+        }
+
+        // ورودی‌های عددی: حذف کاراکترهای غیرعددی به صورت زنده
+        document.querySelectorAll('input[data-digits-only]').forEach(function (input) {
+            input.addEventListener('input', function () {
+                this.value = normalizeDigits(this.value).replace(/\D/g, '');
+            });
+        });
+
+        function clientValidateContainer(container) {
+            const errors = [];
+            const seen = new Set();
+
+            container.querySelectorAll('input:not([type="hidden"]):not([type="file"]):not([type="radio"]), select, textarea')
+                .forEach(function (el) {
+                    if (el.disabled || seen.has(el.name)) return;
+                    seen.add(el.name);
+
+                    const label = el.dataset.label || el.name;
+                    const value = normalizeDigits(el.value).trim();
+                    const isEmpty = !value;
+
+                    if (el.required && isEmpty) {
+                        errors.push(el.tagName === 'SELECT'
+                            ? 'لطفاً ' + label + ' را انتخاب کنید.'
+                            : 'وارد کردن ' + label + ' الزامی است.');
+                        return;
+                    }
+
+                    if (!isEmpty && el.pattern) {
+                        const re = new RegExp('^(?:' + el.pattern + ')$');
+                        if (!re.test(value)) {
+                            errors.push(el.dataset.patternError || (label + ' در فرمت صحیح نیست.'));
+                        }
+                    }
+                });
+
+            return errors;
+        }
+
+        function showClientErrors(errors) {
+            const box = document.getElementById('client-errors');
+            const list = box.querySelector('ul');
+            list.innerHTML = '';
+            errors.forEach(function (msg) {
+                const li = document.createElement('li');
+                li.textContent = msg;
+                list.appendChild(li);
+            });
+            box.classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function hideClientErrors() {
+            document.getElementById('client-errors').classList.add('hidden');
+        }
+
         function nextStep(step) {
+            const errors = clientValidateContainer(document.getElementById('step-' + currentStep));
+            if (errors.length > 0) {
+                showClientErrors(errors);
+                return;
+            }
+            hideClientErrors();
             currentStep = step;
             showStep(step);
         }
 
         function prevStep(step) {
+            hideClientErrors();
             currentStep = step;
             showStep(step);
         }
@@ -701,6 +803,15 @@
             const count = document.getElementById('documents-container').querySelectorAll('.doc-row').length;
             document.getElementById('add-doc-btn').style.display = count >= MAX_FILES ? 'none' : '';
         }
+    </script>
+
+    {{-- Province-City Picker (نیاز به jQuery دارد) --}}
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="{{ url('behin/behin-js/province-city-picker.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            initProvinceCityPicker('province_select', 'city_select', '{{ old('city') }}');
+        });
     </script>
 </body>
 

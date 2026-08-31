@@ -16,9 +16,28 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SmeRegistrationController;
+use SolarPlantRequests\Models\SolarPlantRequest;
 
 Route::get('installer/apply', [InstallerRegistrationController::class, 'create'])->name('installers.apply');
 Route::post('installer/apply', [InstallerRegistrationController::class, 'store'])->name('installers.store');
+
+// API: شهرهای یک استان بر اساس نام استان
+Route::get('api/cities', function (\Illuminate\Http\Request $request) {
+    $provinceName = $request->query('province', '');
+
+    // نرمال‌سازی: تبدیل ي و ك عربی به ی و ک فارسی و حذف فاصله‌ها برای مقایسه
+    $normalize = fn(string $s): string => str_replace(
+        ['ي', 'ك', 'ة', 'ؤ', 'إ', 'أ', ' ', "\u{200c}"],
+        ['ی', 'ک', 'ه', 'و', 'ا', 'ا', '', ''],
+        trim($s)
+    );
+
+    $needle = $normalize($provinceName);
+    $cities = json_decode(file_get_contents(resource_path('data/cities.json')), true);
+    $filtered = array_values(array_filter($cities, fn($c) => $normalize($c['provinceName']) === $needle));
+    usort($filtered, fn($a, $b) => strcmp($a['cityName'], $b['cityName']));
+    return response()->json($filtered);
+})->name('api.cities');
 
 Route::get('', function(){
     if(Auth::check()){
@@ -30,8 +49,25 @@ Route::get('', function(){
 require __DIR__.'/auth.php';
 require __DIR__.'/services.php';
 
+// داشبورد متقاضی: کاربران عادی (متقاضی) به این صفحه هدایت می‌شوند
+Route::get('applicant/dashboard', function () {
+    return view('admin.applicant-dashboard');
+})->middleware(['web', 'auth'])->name('applicant.dashboard');
+
 Route::prefix('admin')->name('admin.')->middleware(['web', 'auth', Access::class])->group(function(){
     Route::get('', function(){
+        $user = Auth::user();
+
+        // اگر کاربر هیچ‌یک از نقش‌های سیستمی را نداشت، متقاضی محسوب می‌شود
+        $isStaff = SolarPlantRequest::userHasRole($user, 'leader')
+            || SolarPlantRequest::userHasRole($user, 'contractor')
+            || SolarPlantRequest::userHasRole($user, 'inspector')
+            || SolarPlantRequest::userHasRole($user, 'expert');
+
+        if (!$isStaff) {
+            return redirect()->route('applicant.dashboard');
+        }
+
         return view('admin.dashboard');
     })->name('dashboard');
 });
@@ -107,7 +143,10 @@ Route::get('migrate-catalogs', function(){
         // base_path('packages/contractor-catalog/src/Database/Migrations'),
         // base_path('packages/solar-plant-equipment/src/Database/Migrations'),
         // base_path('packages/inspector-catalog/src/Database/Migrations'),
-        base_path('packages/project-inspection/src/Database/Migrations'),
+        // base_path('packages/project-inspection/src/Database/Migrations'),
+        // base_path('packages/expert-catalog/src/Database/Migrations'),
+        // base_path('packages/request-expert-review/src/Database/Migrations'),
+        base_path('packages/expert-initial-visit/src/Database/Migrations'),
     ];
 
     $logs = [];

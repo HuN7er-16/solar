@@ -64,7 +64,7 @@ class SolarPlantRequestController
         $solarPlantRequest = SolarPlantRequest::create([
             ...$validated,
             'user_id'   => $request->user()->id,
-            'status'    => SolarPlantRequestStatus::UNDER_REVIEW,
+            'status'    => SolarPlantRequestStatus::INITIAL,
             'images'    => $imagePaths ?: null,
             'documents' => $documentPaths ?: null,
         ]);

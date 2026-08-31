@@ -35,4 +35,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('logout', [LoginController::class, 'destroy'])
                 ->name('logout');
+
+    Route::get('setup-name', [OtpLoginController::class, 'setupNameView'])->name('otp.setup-name');
+    Route::post('setup-name', [OtpLoginController::class, 'setupNameStore'])->name('otp.setup-name.store');
 });

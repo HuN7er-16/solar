@@ -146,7 +146,9 @@
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label fw-semibold mb-2" style="color: #37474F;">شهر <span class="text-danger">*</span></label>
-                                <input type="text" name="city" class="form-control form-control-lg" value="{{ old('city') }}" required style="border-radius: 10px; border: 2px solid #E0E0E0; padding: 12px 16px; transition: all 0.2s;" onfocus="this.style.borderColor='#BA68C8'; this.style.boxShadow='0 0 0 3px rgba(186,104,200,0.15)';" onblur="this.style.borderColor='#E0E0E0'; this.style.boxShadow='none';">
+                                <select name="city" id="city_select" class="form-control form-control-lg select2 @error('city') is-invalid @enderror" required style="border-radius: 10px; border: 2px solid #E0E0E0; padding: 12px 16px;">
+                                    <option value="">ابتدا استان را انتخاب کنید</option>
+                                </select>
                                 @error('city') <div class="text-danger small mt-2"><i class="fa fa-exclamation-circle ms-1"></i>{{ $message }}</div> @enderror
                             </div>
                             <div class="col-md-12">
@@ -251,8 +253,11 @@
 @endsection
 
 @section('script')
+<script src="{{ url('behin/behin-js/province-city-picker.js') }}"></script>
 <script>
     $(document).ready(function() {
+        initProvinceCityPicker('province_select', 'city_select', '{{ old('city') }}');
+
         $('#fillLastRecord').on('click', function() {
             var btn = $(this);
             btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin ms-1"></i> در حال دریافت...');

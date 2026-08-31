@@ -90,7 +90,7 @@
                         <div class="row g-3">
                             <div class="col-md-4">
                                 <label class="form-label">استان محل فعالیت <span class="text-danger">*</span></label>
-                                <select name="province" class="form-control select2 @error('province') is-invalid @enderror" required>
+                                <select name="province" class="form-control select2 @error('province') is-invalid @enderror" required id="province_select">
                                     <option value="">-- انتخاب کنید --</option>
                                     @foreach($provinces as $province)
                                         <option value="{{ $province }}" {{ old('province', $inspector->province) == $province ? 'selected' : '' }}>{{ $province }}</option>
@@ -100,7 +100,9 @@
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">شهر محل فعالیت <span class="text-danger">*</span></label>
-                                <input type="text" name="city" class="form-control @error('city') is-invalid @enderror" value="{{ old('city', $inspector->city) }}" required>
+                                <select name="city" id="city_select" class="form-control select2 @error('city') is-invalid @enderror" required>
+                                    <option value="{{ old('city', $inspector->city) }}">{{ old('city', $inspector->city) }}</option>
+                                </select>
                                 @error('city') <div class="text-danger small">{{ $message }}</div> @enderror
                             </div>
                             <div class="col-md-12">
@@ -144,4 +146,13 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('script')
+<script src="{{ url('behin/behin-js/province-city-picker.js') }}"></script>
+<script>
+    $(document).ready(function() {
+        initProvinceCityPicker('province_select', 'city_select', '{{ old('city', $inspector->city) }}');
+    });
+</script>
 @endsection

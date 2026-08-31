@@ -434,7 +434,7 @@
                             <i class="fa fa-sun-o welcome-icon ms-4 flex-shrink-0 mt-1"></i>
                             <div>
                                 <h1 class="welcome-title">خوش آمدید، {{ auth()->user()->name ?? 'کاربر عزیز' }} 👋</h1>
-                                <p class="welcome-subtitle">به پنل مدیریت سامانه نیروگاه‌های خورشیدی خوش آمدید. امروز روز خوبی برای انرژی پاک است!</p>
+                                <p class="welcome-subtitle">به پنل مدیریت سامانه جامع انرژی‌های تجدیدپذیر و خورشیدی اصناف (ساتا اصناف) خوش آمدید. امروز روز خوبی برای انرژی پاک است!</p>
                             </div>
                         </div>
                     </div>
@@ -652,17 +652,45 @@
 
                     <h5 class="role-section-title mb-3"><i class="fa fa-users ms-2" style="color:#7B1FA2;"></i>لیست افراد</h5>
                     <div class="row g-3 mb-5">
-                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
                             <a href="{{ route('contractor-catalog.index') }}" class="quick-link-btn ql-purple">
                                 <div class="ql-icon"><i class="ion ion-person-stalker"></i></div>
                                 <div class="ql-text">لیست پیمانکاران<small>مدیریت و مشاهده اطلاعات پیمانکاران</small></div>
                                 <i class="fa fa-angle-left ql-arrow"></i>
                             </a>
                         </div>
-                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
                             <a href="{{ route('inspector-catalog.index') }}" class="quick-link-btn ql-teal">
                                 <div class="ql-icon"><i class="fa fa-user-check"></i></div>
                                 <div class="ql-text">لیست بازرس‌ها<small>مدیریت و مشاهده اطلاعات بازرس‌های سامانه</small></div>
+                                <i class="fa fa-angle-left ql-arrow"></i>
+                            </a>
+                        </div>
+                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+                            <a href="{{ route('expert-catalog.index') }}" class="quick-link-btn"
+                               style="background:linear-gradient(135deg,#7986CB,#5C6BC0);color:white;">
+                                <div class="ql-icon"><i class="fa fa-user-tie"></i></div>
+                                <div class="ql-text">لیست کارشناسان<small>مدیریت و مشاهده اطلاعات کارشناسان سامانه</small></div>
+                                <i class="fa fa-angle-left ql-arrow"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <h5 class="role-section-title mb-3"><i class="fa fa-user-tag ms-2" style="color:#3949AB;"></i>مدیریت کارشناسان</h5>
+                    <div class="row g-3 mb-5">
+                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                            <a href="{{ route('request-expert-review.admin.index') }}" class="quick-link-btn"
+                               style="background:linear-gradient(135deg,#5C6BC0,#3949AB);color:white;">
+                                <div class="ql-icon"><i class="fa fa-tasks"></i></div>
+                                <div class="ql-text">تخصیص کارشناس به تقاضاها<small>اختصاص کارشناس به تقاضاهای در وضعیت ثبت اولیه</small></div>
+                                <i class="fa fa-angle-left ql-arrow"></i>
+                            </a>
+                        </div>
+                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                            <a href="{{ route('expert-catalog.create') }}" class="quick-link-btn"
+                               style="background:linear-gradient(135deg,#7986CB,#5C6BC0);color:white;">
+                                <div class="ql-icon"><i class="fa fa-user-plus"></i></div>
+                                <div class="ql-text">افزودن کارشناس جدید<small>ثبت اطلاعات کارشناس و اختصاص نقش</small></div>
                                 <i class="fa fa-angle-left ql-arrow"></i>
                             </a>
                         </div>
@@ -749,6 +777,76 @@
                                 {{ trans('مشاهده') }} <i class="fa fa-arrow-circle-left"></i>
                             </a>
                         </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+
+        @php
+            $expertRoleId = config('request-expert-review.roles.expert', 14);
+        @endphp
+
+        @if ($expertRoleId && auth()->user()->role_id == $expertRoleId)
+            <div class="quick-link-card">
+                <h3 class="section-title mb-4"><i class="fa fa-compass ms-2" style="color:#5C6BC0;"></i>بخش‌های کارشناس</h3>
+
+                @php
+                    try {
+                        $expertPendingCount = \SolarPlantRequests\Models\SolarPlantRequest::query()
+                            ->where('status', \SolarPlantRequests\Enums\SolarPlantRequestStatus::UNDER_REVIEW)
+                            ->where('expert_user_id', auth()->id())
+                            ->count();
+                    } catch (\Throwable $e) {
+                        $expertPendingCount = 0;
+                    }
+                @endphp
+
+                {{-- آمار کارشناس --}}
+                <div class="row g-4 mb-4">
+                    <div class="col-md-4 col-sm-6">
+                        <div class="stat-card" style="border-right: 4px solid #5C6BC0;">
+                            <div class="stat-icon-wrap" style="background:linear-gradient(135deg,#7986CB,#5C6BC0);">
+                                <i class="fa fa-clipboard-list" style="color:white;font-size:24px;"></i>
+                            </div>
+                            <p class="stat-number" style="color:#283593;">{{ $expertPendingCount }}</p>
+                            <p class="stat-label">تقاضا در انتظار بررسی</p>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- دکمه‌های دسترسی سریع --}}
+                <div class="row g-3">
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                        <a href="{{ route('request-expert-review.expert.index') }}"
+                           class="quick-link-btn"
+                           style="background:linear-gradient(135deg,#7986CB,#5C6BC0);color:white;">
+                            <div class="ql-icon"><i class="fa fa-clipboard-list"></i></div>
+                            <div class="ql-text">
+                                تقاضاهای من
+                                @if ($expertPendingCount > 0)
+                                    <span class="badge ms-2"
+                                          style="background:rgba(255,255,255,0.3);color:white;font-size:13px;padding:4px 10px;border-radius:20px;">
+                                        {{ $expertPendingCount }}
+                                    </span>
+                                @endif
+                                <small>تقاضاهایی که راهبر به شما اختصاص داده است</small>
+                            </div>
+                            <i class="fa fa-angle-left ql-arrow"></i>
+                        </a>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                        @if(class_exists(\ExpertInitialVisit\Models\ExpertInitialVisit::class))
+                        <a href="{{ route('expert-initial-visit.index') }}"
+                           class="quick-link-btn"
+                           style="background:linear-gradient(135deg,#5C6BC0,#3949AB);color:white;">
+                            <div class="ql-icon"><i class="fa fa-clipboard-check"></i></div>
+                            <div class="ql-text">
+                                گزارش‌های بازدید اولیه
+                                <small>ثبت و مشاهده فرم‌های بازدید اولیه از محل پروژه</small>
+                            </div>
+                            <i class="fa fa-angle-left ql-arrow"></i>
+                        </a>
+                        @endif
                     </div>
                 </div>
             </div>

@@ -119,6 +119,7 @@ class ComposerStaticInitf86875715c5b32c6021b837db7efc70f
         ),
         'R' =>
         array (
+            'RequestExpertReview\\' => 20,
             'Ramsey\\Uuid\\' => 12,
             'Ramsey\\Collection\\' => 18,
         ),
@@ -201,6 +202,7 @@ class ComposerStaticInitf86875715c5b32c6021b837db7efc70f
         ),
         'E' =>
         array (
+            'ExpertCatalog\\' => 14,
             'Egulias\\EmailValidator\\' => 23,
         ),
         'D' =>
@@ -428,6 +430,10 @@ class ComposerStaticInitf86875715c5b32c6021b837db7efc70f
         array (
             0 => __DIR__ . '/../..' . '/packages/solar-plant-equipment/src',
         ),
+        'RequestExpertReview\\' =>
+        array (
+            0 => __DIR__ . '/../..' . '/packages/request-expert-review/src',
+        ),
         'Ramsey\\Uuid\\' =>
         array (
             0 => __DIR__ . '/..' . '/ramsey/uuid/src',
@@ -650,6 +656,10 @@ class ComposerStaticInitf86875715c5b32c6021b837db7efc70f
         'Faker\\' =>
         array (
             0 => __DIR__ . '/..' . '/fakerphp/faker/src/Faker',
+        ),
+        'ExpertCatalog\\' =>
+        array (
+            0 => __DIR__ . '/../..' . '/packages/expert-catalog/src',
         ),
         'Egulias\\EmailValidator\\' =>
         array (
@@ -1291,6 +1301,9 @@ class ComposerStaticInitf86875715c5b32c6021b837db7efc70f
         'Egulias\\EmailValidator\\Warning\\QuotedString' => __DIR__ . '/..' . '/egulias/email-validator/src/Warning/QuotedString.php',
         'Egulias\\EmailValidator\\Warning\\TLD' => __DIR__ . '/..' . '/egulias/email-validator/src/Warning/TLD.php',
         'Egulias\\EmailValidator\\Warning\\Warning' => __DIR__ . '/..' . '/egulias/email-validator/src/Warning/Warning.php',
+        'ExpertCatalog\\ExpertCatalogServiceProvider' => __DIR__ . '/../..' . '/packages/expert-catalog/src/ExpertCatalogServiceProvider.php',
+        'ExpertCatalog\\Http\\Controllers\\ExpertCatalogController' => __DIR__ . '/../..' . '/packages/expert-catalog/src/Http/Controllers/ExpertCatalogController.php',
+        'ExpertCatalog\\Models\\Expert' => __DIR__ . '/../..' . '/packages/expert-catalog/src/Models/Expert.php',
         'Faker\\Calculator\\Ean' => __DIR__ . '/..' . '/fakerphp/faker/src/Faker/Calculator/Ean.php',
         'Faker\\Calculator\\Iban' => __DIR__ . '/..' . '/fakerphp/faker/src/Faker/Calculator/Iban.php',
         'Faker\\Calculator\\Inn' => __DIR__ . '/..' . '/fakerphp/faker/src/Faker/Calculator/Inn.php',
@@ -6909,6 +6922,10 @@ class ComposerStaticInitf86875715c5b32c6021b837db7efc70f
         'Ramsey\\Uuid\\UuidInterface' => __DIR__ . '/..' . '/ramsey/uuid/src/UuidInterface.php',
         'Ramsey\\Uuid\\Validator\\GenericValidator' => __DIR__ . '/..' . '/ramsey/uuid/src/Validator/GenericValidator.php',
         'Ramsey\\Uuid\\Validator\\ValidatorInterface' => __DIR__ . '/..' . '/ramsey/uuid/src/Validator/ValidatorInterface.php',
+        'RequestExpertReview\\Http\\Controllers\\AdminAssignExpertController' => __DIR__ . '/../..' . '/packages/request-expert-review/src/Http/Controllers/AdminAssignExpertController.php',
+        'RequestExpertReview\\Http\\Controllers\\ExpertGetController' => __DIR__ . '/../..' . '/packages/request-expert-review/src/Http/Controllers/ExpertGetController.php',
+        'RequestExpertReview\\Http\\Controllers\\ExpertRequestController' => __DIR__ . '/../..' . '/packages/request-expert-review/src/Http/Controllers/ExpertRequestController.php',
+        'RequestExpertReview\\RequestExpertReviewServiceProvider' => __DIR__ . '/../..' . '/packages/request-expert-review/src/RequestExpertReviewServiceProvider.php',
         'SQLite3Exception' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/SQLite3Exception.php',
         'SebastianBergmann\\CliParser\\AmbiguousOptionException' => __DIR__ . '/..' . '/sebastian/cli-parser/src/exceptions/AmbiguousOptionException.php',
         'SebastianBergmann\\CliParser\\Exception' => __DIR__ . '/..' . '/sebastian/cli-parser/src/exceptions/Exception.php',

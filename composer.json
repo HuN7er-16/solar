@@ -52,7 +52,10 @@
             "ContractorCatalog\\": "packages/contractor-catalog/src/",
             "InspectorCatalog\\": "packages/inspector-catalog/src/",
             "SolarPlantEquipment\\": "packages/solar-plant-equipment/src/",
-            "ProjectInspection\\": "packages/project-inspection/src/"
+            "ProjectInspection\\": "packages/project-inspection/src/",
+            "ExpertCatalog\\": "packages/expert-catalog/src/",
+            "RequestExpertReview\\": "packages/request-expert-review/src/",
+            "ExpertInitialVisit\\": "packages/expert-initial-visit/src/"
         },
         "files": [
             "packages/behin-init/src/App/Helpers/behin-helpers.php"

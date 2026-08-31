@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>سامانه جامع اطلاعات پروژه های خورشیدی NSIS</title>
+    <title>سامانه جامع انرژی‌های تجدیدپذیر و خورشیدی اصناف (ساتا اصناف)</title>
     <script src="{{ url('behin/behin-dist/dist/js/tailwind-3.4.17.min.js') }}"></script>
     <link href="{{ url('behin/behin-dist/css/css2.css') }}?family=Vazirmatn:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
@@ -17,8 +17,7 @@
     <header class="bg-gradient-to-l from-amber-400 via-yellow-300 to-lime-300 text-gray-900">
         <div class="container mx-auto px-6 py-8 flex flex-col md:flex-row items-center justify-between gap-6">
             <div class="text-center md:text-right">
-                <h1 class="text-2xl md:text-3xl font-bold">سامانه جامع اطلاعات پروژه‌های خورشیدی NSIS</h1>
-                <p class="mt-2 text-sm md:text-base text-gray-800">National Solar Information System</p>
+                <h1 class="text-2xl md:text-3xl font-bold">سامانه جامع انرژی‌های تجدیدپذیر و خورشیدی اصناف (ساتا اصناف)</h1>
             </div>
             @php
                 $logoPath = public_path('behin/images/logo-union.png');
@@ -59,7 +58,7 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
 
                 <div>
-                    <h3 class="font-bold text-lg mb-2 text-amber-600">سامانه جامع اطلاعات خورشیدی NSIS</h3>
+                    <h3 class="font-bold text-lg mb-2 text-amber-600">سامانه جامع انرژی‌های تجدیدپذیر و خورشیدی اصناف (ساتا اصناف)</h3>
                     <p class="text-sm text-gray-600 leading-6">سامانه رسمی اتحادیه کشوری سوخت‌های جایگزین و خدمات وابسته.</p>
                 </div>
 

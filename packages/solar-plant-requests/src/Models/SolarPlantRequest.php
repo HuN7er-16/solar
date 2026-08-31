@@ -49,6 +49,8 @@ class SolarPlantRequest extends Model
         'contractor_name',
         'inspector_user_id',
         'inspector_name',
+        'expert_user_id',
+        'expert_name',
         'status',
     ];
 
@@ -99,6 +101,11 @@ class SolarPlantRequest extends Model
         return $this->belongsTo(User::class, 'inspector_user_id');
     }
 
+    public function expert(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'expert_user_id');
+    }
+
     public function panels(): HasMany
     {
         return $this->hasMany(Panel::class, 'solar_plant_request_id');
@@ -128,6 +135,10 @@ class SolarPlantRequest extends Model
 
         if (self::userHasRole($user, 'inspector')) {
             return $query->where('inspector_user_id', $user->id);
+        }
+
+        if (self::userHasRole($user, 'expert')) {
+            return $query->where('expert_user_id', $user->id);
         }
 
         return $query->where('user_id', $user->id);

@@ -105,6 +105,39 @@ return [
                 'create' => [ 'fa_name' => 'افزودن پنل جدید', 'route-name' => 'panel-catalog.create' ],
             ]
         ],
+        'expert-catalog' => [
+            'icon' => 'manage_accounts',
+            'fa_name' => 'کاتالوگ کارشناسان',
+            'route-name' => 'expert-catalog.index',
+            'submenu' => [
+                'index'  => [ 'fa_name' => 'لیست کارشناسان', 'route-name' => 'expert-catalog.index' ],
+                'create' => [ 'fa_name' => 'افزودن کارشناس جدید', 'route-name' => 'expert-catalog.create' ],
+            ]
+        ],
+        'request-expert-review-admin' => [
+            'icon' => 'assignment_ind',
+            'fa_name' => 'تخصیص کارشناس',
+            'route-name' => 'request-expert-review.admin.index',
+            'submenu' => [
+                'index' => [ 'fa_name' => 'تخصیص کارشناس به تقاضاها', 'route-name' => 'request-expert-review.admin.index' ],
+            ]
+        ],
+        'request-expert-review-expert' => [
+            'icon' => 'assignment',
+            'fa_name' => 'تقاضاهای من (کارشناس)',
+            'route-name' => 'request-expert-review.expert.index',
+            'submenu' => [
+                'index' => [ 'fa_name' => 'تقاضاهای اختصاص‌یافته', 'route-name' => 'request-expert-review.expert.index' ],
+            ]
+        ],
+        'expert-initial-visit' => [
+            'icon' => 'fact_check',
+            'fa_name' => 'بازدید اولیه',
+            'route-name' => 'expert-initial-visit.index',
+            'submenu' => [
+                'index' => [ 'fa_name' => 'لیست گزارش‌های بازدید', 'route-name' => 'expert-initial-visit.index' ],
+            ]
+        ],
         'exit' => [
             'icon' => 'logout',
             'fa_name' => 'خروج',
