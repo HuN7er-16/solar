@@ -809,8 +809,9 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="{{ url('behin/behin-js/province-city-picker.js') }}"></script>
     <script>
+        var citiesData = {!! json_encode(json_decode(file_get_contents(resource_path('data/cities.json')), true), JSON_UNESCAPED_UNICODE) !!};
         $(document).ready(function() {
-            initProvinceCityPicker('province_select', 'city_select', '{{ old('city') }}');
+            initProvinceCityPicker('province_select', 'city_select', '{{ old('city') }}', citiesData);
         });
     </script>
 </body>
