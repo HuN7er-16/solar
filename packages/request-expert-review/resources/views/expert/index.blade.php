@@ -19,10 +19,17 @@
                 <h3 class="mb-1 fw-bold"><i class="fa fa-clipboard-list ms-2"></i>تقاضاهای من</h3>
                 <p class="mb-0 opacity-90">تقاضاهایی که برای بررسی به شما اختصاص داده شده‌اند</p>
             </div>
-            <span class="badge"
-                  style="background:rgba(255,255,255,0.2);color:#fff;font-size:16px;padding:10px 20px;border-radius:10px;">
-                {{ $requests->count() }} تقاضا
-            </span>
+            <div class="d-flex align-items-center gap-3 flex-wrap">
+                <span class="badge"
+                      style="background:rgba(255,255,255,0.2);color:#fff;font-size:16px;padding:10px 20px;border-radius:10px;">
+                    {{ $requests->count() }} تقاضا
+                </span>
+                <a href="{{ route('admin.dashboard') }}"
+                   class="btn btn-light"
+                   style="border-radius:10px;color:#3949AB;font-weight:600;">
+                    <i class="fa fa-home ms-1"></i> بازگشت به داشبرد
+                </a>
+            </div>
         </div>
     </div>
 
@@ -95,26 +102,37 @@
                                         {{ \Morilog\Jalali\Jalalian::fromDateTime($req->created_at)->format('Y/m/d') }}
                                     </td>
                                     <td style="padding:14px 16px;vertical-align:middle;">
-                                        <a href="{{ route('request-expert-review.expert.show', $req) }}"
-                                           class="btn btn-sm text-white"
-                                           style="background:linear-gradient(135deg,#7986CB,#5C6BC0);border-radius:8px;font-weight:600;padding:7px 16px;">
-                                            <i class="fa fa-eye ms-1"></i> مشاهده و بررسی
-                                        </a>
                                         @php
-                                            $hasVisit = false;
+                                            $existingVisit = null;
                                             if (class_exists(\ExpertInitialVisit\Models\ExpertInitialVisit::class)) {
                                                 try {
-                                                    $hasVisit = \ExpertInitialVisit\Models\ExpertInitialVisit::query()
-                                                        ->where('solar_plant_request_id', $req->id)->exists();
+                                                    $existingVisit = \ExpertInitialVisit\Models\ExpertInitialVisit::query()
+                                                        ->where('solar_plant_request_id', $req->id)->first();
                                                 } catch (\Throwable $e) {}
                                             }
                                         @endphp
-                                        @if($hasVisit)
-                                            <span class="badge mt-1 d-block"
-                                                  style="background:#C8E6C9;color:#1B5E20;padding:5px 10px;border-radius:6px;font-size:11px;">
-                                                <i class="fa fa-check ms-1"></i> بازدید ثبت شده
-                                            </span>
-                                        @endif
+                                        <div class="d-flex flex-column gap-2">
+                                            <a href="{{ route('request-expert-review.expert.show', $req) }}"
+                                               class="btn btn-sm text-white"
+                                               style="background:linear-gradient(135deg,#7986CB,#5C6BC0);border-radius:8px;font-weight:600;padding:7px 16px;">
+                                                <i class="fa fa-eye ms-1"></i> مشاهده جزئیات
+                                            </a>
+                                            @if(class_exists(\ExpertInitialVisit\Models\ExpertInitialVisit::class))
+                                                @if($existingVisit)
+                                                    <a href="{{ route('expert-initial-visit.show', $existingVisit) }}"
+                                                       class="btn btn-sm text-white"
+                                                       style="background:linear-gradient(135deg,#4CAF50,#2E7D32);border-radius:8px;font-weight:600;padding:7px 16px;">
+                                                        <i class="fa fa-check-circle ms-1"></i> مشاهده فرم بازدید
+                                                    </a>
+                                                @else
+                                                    <a href="{{ route('expert-initial-visit.create', ['request_id' => $req->id]) }}"
+                                                       class="btn btn-sm text-white"
+                                                       style="background:linear-gradient(135deg,#FF9800,#E65100);border-radius:8px;font-weight:600;padding:7px 16px;">
+                                                        <i class="fa fa-clipboard-check ms-1"></i> ثبت فرم بازدید
+                                                    </a>
+                                                @endif
+                                            @endif
+                                        </div>
                                     </td>
                                 </tr>
                             @endforeach

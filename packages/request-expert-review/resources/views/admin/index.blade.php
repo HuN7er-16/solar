@@ -139,14 +139,38 @@
                                                 </button>
                                             </form>
                                         @else
-                                            <span class="text-muted small">
-                                                <i class="fa fa-info-circle ms-1" style="color:#9E9E9E;"></i>
-                                                @if ($req->expert_name)
-                                                    قبلاً اختصاص داده شده
+                                            @php
+                                                $visit = null;
+                                                if (class_exists(\ExpertInitialVisit\Models\ExpertInitialVisit::class)) {
+                                                    try {
+                                                        $visit = \ExpertInitialVisit\Models\ExpertInitialVisit::query()
+                                                            ->where('solar_plant_request_id', $req->id)
+                                                            ->first();
+                                                    } catch (\Throwable $e) {}
+                                                }
+                                            @endphp
+                                            <div class="d-flex flex-column gap-2">
+                                                @if ($visit)
+                                                    <a href="{{ route('expert-initial-visit.show', $visit) }}"
+                                                       class="btn btn-sm text-white"
+                                                       style="background:linear-gradient(135deg,#4CAF50,#2E7D32);border-radius:8px;font-weight:600;padding:7px 16px;white-space:nowrap;">
+                                                        <i class="fa fa-eye ms-1"></i> مشاهده فرم بازدید
+                                                    </a>
                                                 @else
-                                                    در این مرحله قابل اختصاص نیست
+                                                    <span class="text-muted small">
+                                                        <i class="fa fa-clock-o ms-1" style="color:#FF9800;"></i>
+                                                        منتظر ثبت فرم بازدید
+                                                    </span>
                                                 @endif
-                                            </span>
+                                                <span class="text-muted" style="font-size:11px;">
+                                                    <i class="fa fa-info-circle ms-1" style="color:#9E9E9E;"></i>
+                                                    @if ($req->expert_name)
+                                                        کارشناس: {{ $req->expert_name }}
+                                                    @else
+                                                        کارشناس اختصاص نیافته
+                                                    @endif
+                                                </span>
+                                            </div>
                                         @endif
                                     </td>
                                 </tr>

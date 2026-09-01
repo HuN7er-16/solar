@@ -12,13 +12,18 @@
                 <p class="mb-0 opacity-90">
                     کد تقاضا: <span style="font-family:monospace;">{{ $expertInitialVisit->request?->unique_code }}</span>
                     &nbsp;|&nbsp; تاریخ بازدید: {{ $expertInitialVisit->visit_date_jalali }}
+                    &nbsp;|&nbsp; کارشناس: {{ $expertInitialVisit->expert?->name }}
                 </p>
             </div>
             <div class="d-flex gap-2">
                 {!! $expertInitialVisit->assessment_result_label !!}
                 <a href="{{ route('expert-initial-visit.index') }}" class="btn btn-light"
                    style="border-radius:10px;color:#3949AB;font-weight:600;">
-                    <i class="fa fa-arrow-right ms-1"></i> بازگشت
+                    <i class="fa fa-arrow-right ms-1"></i> بازگشت به لیست
+                </a>
+                <a href="{{ route('admin.dashboard') }}" class="btn btn-light"
+                   style="border-radius:10px;color:#546E7A;font-weight:600;">
+                    <i class="fa fa-home ms-1"></i> داشبرد
                 </a>
             </div>
         </div>

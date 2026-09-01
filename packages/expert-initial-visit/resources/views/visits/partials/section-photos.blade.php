@@ -1,4 +1,4 @@
-<div class="card mb-4" style="border-radius:12px;border:none;box-shadow:0 4px 20px rgba(0,0,0,0.08);">
+﻿<div class="card mb-4" style="border-radius:12px;border:none;box-shadow:0 4px 20px rgba(0,0,0,0.08);">
     <div class="card-header d-flex align-items-center gap-3"
          style="background:linear-gradient(135deg,#E8EAF6,#C5CAE9);border-radius:12px 12px 0 0;border:none;">
         <div style="width:38px;height:38px;background:linear-gradient(135deg,#7986CB,#5C6BC0);border-radius:10px;display:flex;align-items:center;justify-content:center;">
@@ -20,7 +20,7 @@
                 <div class="col-md-4">
                     <label class="form-label fw-semibold mb-1">نوع تصویر:</label>
                     <select name="photo_type[]" class="form-control form-control-sm"
-                            style="border-radius:8px;border:2px solid #E0E0E0;padding:8px 12px;">
+                            style="border-radius:8px;">
                         @foreach($photoTypes as $v=>$l)
                         <option value="{{ $v }}">{{ $l }}</option>
                         @endforeach
@@ -29,13 +29,13 @@
                 <div class="col-md-4">
                     <label class="form-label fw-semibold mb-1">انتخاب تصویر:</label>
                     <input type="file" name="photo_file[]" accept="image/*" class="form-control form-control-sm"
-                           style="border-radius:8px;border:2px solid #E0E0E0;padding:7px 12px;">
+                           style="border-radius:8px;padding:6px 12px;">
                 </div>
                 <div class="col-md-3">
                     <label class="form-label fw-semibold mb-1">توضیح کوتاه:</label>
                     <input type="text" name="photo_caption[]" class="form-control form-control-sm"
                            placeholder="توضیح اختیاری..."
-                           style="border-radius:8px;border:2px solid #E0E0E0;padding:8px 12px;">
+                           style="border-radius:8px;">
                 </div>
                 <div class="col-md-1 d-flex align-items-end">
                     <button type="button" class="btn btn-sm btn-danger remove-photo-row"
@@ -54,35 +54,4 @@
     </div>
 </div>
 
-@push('scripts')
-<script>
-var photoTypes = @json($photoTypes);
 
-document.getElementById('addPhotoRow')?.addEventListener('click', function() {
-    var container = document.getElementById('photosContainer');
-    var row = container.querySelector('.photo-row').cloneNode(true);
-
-    // reset values
-    row.querySelectorAll('input').forEach(function(i){ i.value=''; });
-    row.querySelector('.remove-photo-row').style.display = '';
-
-    container.appendChild(row);
-    updateRemoveButtons();
-});
-
-document.addEventListener('click', function(e) {
-    if (e.target.closest('.remove-photo-row')) {
-        e.target.closest('.photo-row').remove();
-        updateRemoveButtons();
-    }
-});
-
-function updateRemoveButtons() {
-    var rows = document.querySelectorAll('.photo-row');
-    rows.forEach(function(row, i) {
-        var btn = row.querySelector('.remove-photo-row');
-        if (btn) btn.style.display = rows.length > 1 ? '' : 'none';
-    });
-}
-</script>
-@endpush

@@ -1,4 +1,4 @@
-@php
+﻿@php
     $req = $solarPlantRequest;
 @endphp
 <div class="card mb-4" style="border-radius:12px;border:none;box-shadow:0 4px 20px rgba(0,0,0,0.08);">
@@ -59,12 +59,11 @@
             <div class="col-md-3">
                 <label class="form-label text-muted small mb-1">تاریخ بازدید <span class="text-danger">*</span></label>
                 <input type="text" name="visit_date" id="visit_date"
-                       class="form-control @error('visit_date') is-invalid @enderror"
+                       class="form-control persian-date @error('visit_date') is-invalid @enderror"
                        value="{{ old('visit_date') }}"
-                       placeholder="مثال: 1405/05/21"
-                       style="border-radius:8px;border:2px solid #E0E0E0;padding:10px 14px;">
+                       placeholder="مثال: ۱۴۰۵/۰۵/۲۱"
+                       style="border-radius:8px;">
                 @error('visit_date')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
-                <small class="text-muted">تاریخ شمسی وارد کنید</small>
             </div>
         </div>
     </div>

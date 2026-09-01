@@ -39,7 +39,7 @@
         <div class="container px-6 py-8 flex flex-col md:flex-row items-center justify-between gap-6">
             <div class="text-center md:text-right">
                 <h1 class="text-2xl md:text-3xl font-bold">داشبورد متقاضی</h1>
-                <p class="mt-2 text-sm md:text-base">سامانه جامع اتحادیه سوخت‌های جایگزین و خدمات وابسته</p>
+                <p class="mt-2 text-sm md:text-base">سامانه جامع انرژی‌های تجدیدپذیر و خورشیدی اصناف (ساتا اصناف)</p>
             </div>
             <div class="flex items-center gap-3">
                 @php

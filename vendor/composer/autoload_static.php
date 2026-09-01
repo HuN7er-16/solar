@@ -202,6 +202,7 @@ class ComposerStaticInitf86875715c5b32c6021b837db7efc70f
         ),
         'E' =>
         array (
+            'ExpertInitialVisit\\' => 19,
             'ExpertCatalog\\' => 14,
             'Egulias\\EmailValidator\\' => 23,
         ),
@@ -656,6 +657,10 @@ class ComposerStaticInitf86875715c5b32c6021b837db7efc70f
         'Faker\\' =>
         array (
             0 => __DIR__ . '/..' . '/fakerphp/faker/src/Faker',
+        ),
+        'ExpertInitialVisit\\' =>
+        array (
+            0 => __DIR__ . '/../..' . '/packages/expert-initial-visit/src',
         ),
         'ExpertCatalog\\' =>
         array (
@@ -1304,6 +1309,11 @@ class ComposerStaticInitf86875715c5b32c6021b837db7efc70f
         'ExpertCatalog\\ExpertCatalogServiceProvider' => __DIR__ . '/../..' . '/packages/expert-catalog/src/ExpertCatalogServiceProvider.php',
         'ExpertCatalog\\Http\\Controllers\\ExpertCatalogController' => __DIR__ . '/../..' . '/packages/expert-catalog/src/Http/Controllers/ExpertCatalogController.php',
         'ExpertCatalog\\Models\\Expert' => __DIR__ . '/../..' . '/packages/expert-catalog/src/Models/Expert.php',
+        'ExpertInitialVisit\\ExpertInitialVisitServiceProvider' => __DIR__ . '/../..' . '/packages/expert-initial-visit/src/ExpertInitialVisitServiceProvider.php',
+        'ExpertInitialVisit\\Http\\Controllers\\ExpertInitialVisitController' => __DIR__ . '/../..' . '/packages/expert-initial-visit/src/Http/Controllers/ExpertInitialVisitController.php',
+        'ExpertInitialVisit\\Models\\ExpertInitialVisit' => __DIR__ . '/../..' . '/packages/expert-initial-visit/src/Models/ExpertInitialVisit.php',
+        'ExpertInitialVisit\\Models\\ExpertVisitEquipmentItem' => __DIR__ . '/../..' . '/packages/expert-initial-visit/src/Models/ExpertVisitEquipmentItem.php',
+        'ExpertInitialVisit\\Models\\ExpertVisitPhoto' => __DIR__ . '/../..' . '/packages/expert-initial-visit/src/Models/ExpertVisitPhoto.php',
         'Faker\\Calculator\\Ean' => __DIR__ . '/..' . '/fakerphp/faker/src/Faker/Calculator/Ean.php',
         'Faker\\Calculator\\Iban' => __DIR__ . '/..' . '/fakerphp/faker/src/Faker/Calculator/Iban.php',
         'Faker\\Calculator\\Inn' => __DIR__ . '/..' . '/fakerphp/faker/src/Faker/Calculator/Inn.php',

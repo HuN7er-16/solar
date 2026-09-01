@@ -21,6 +21,10 @@
             <span class="badge" style="background:rgba(255,255,255,0.2);color:#fff;font-size:15px;padding:10px 20px;border-radius:10px;">
                 {{ $visits->total() }} گزارش
             </span>
+            <a href="{{ route('admin.dashboard') }}" class="btn btn-light"
+               style="border-radius:10px;color:#3949AB;font-weight:600;">
+                <i class="fa fa-home ms-1"></i> داشبرد
+            </a>
         </div>
     </div>
 

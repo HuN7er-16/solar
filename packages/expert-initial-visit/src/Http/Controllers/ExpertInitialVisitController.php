@@ -325,25 +325,67 @@ class ExpertInitialVisitController
             // بخش ۱۲
             'expert_summary'                   => ['required', 'string', 'min:20'],
         ], [
-            'visit_date.required'                    => 'تاریخ بازدید الزامی است.',
-            'location_access.required'               => 'وضعیت دسترسی به محل الزامی است.',
-            'installation_location_type.required'    => 'نوع محل نصب الزامی است.',
-            'surface_type.required'                  => 'نوع سطح نصب الزامی است.',
-            'surface_orientation.required'           => 'وضعیت سطح الزامی است.',
-            'panel_direction.required'               => 'جهت نصب پنل الزامی است.',
-            'shading_level.required'                 => 'میزان سایه‌اندازی الزامی است.',
-            'surface_condition.required'             => 'وضعیت سطح برای نصب الزامی است.',
-            'structure_load_capacity.required'       => 'وضعیت تحمل بار سازه الزامی است.',
-            'overall_risk_level.required'            => 'سطح ریسک کلی الزامی است.',
-            'electricity_type.required'              => 'نوع برق محل الزامی است.',
-            'main_panel_condition.required'          => 'وضعیت تابلو برق الزامی است.',
-            'electrical_installation_condition.required' => 'وضعیت تأسیسات برق الزامی است.',
-            'inverter_location.required'             => 'وضعیت محل اینورتر الزامی است.',
-            'battery_location.required'              => 'وضعیت محل باتری الزامی است.',
-            'expert_proposed_capacity_kw.required'   => 'ظرفیت پیشنهادی کارشناس الزامی است.',
-            'assessment_result.required'             => 'نتیجه ارزیابی الزامی است.',
-            'expert_summary.required'                => 'جمع‌بندی کارشناسی الزامی است.',
-            'expert_summary.min'                     => 'جمع‌بندی باید حداقل ۲۰ کاراکتر باشد.',
+            // بخش ۱
+            'visit_date.required'                            => 'بخش ۱: تاریخ بازدید الزامی است.',
+            'visit_date.date'                                => 'بخش ۱: فرمت تاریخ بازدید صحیح نیست.',
+
+            // بخش ۲
+            'location_matches.required'                      => 'بخش ۲: مشخص کنید محل بازدید با محل اعلام‌شده مطابقت دارد یا خیر.',
+            'location_physically_confirmed.required'         => 'بخش ۲: تأیید وجود فیزیکی محل الزامی است.',
+            'location_access.required'                       => 'بخش ۲: وضعیت دسترسی به محل را انتخاب کنید.',
+
+            // بخش ۳
+            'suitable_space_exists.required'                 => 'بخش ۳: مشخص کنید فضای مناسب برای احداث وجود دارد یا خیر.',
+            'installation_location_type.required'            => 'بخش ۳: نوع محل نصب را انتخاب کنید.',
+            'access_to_installation_site.required'           => 'بخش ۳: وضعیت دسترسی به محل نصب الزامی است.',
+            'physical_obstacle_exists.required'              => 'بخش ۳: وجود یا عدم وجود مانع فیزیکی را مشخص کنید.',
+
+            // بخش ۴
+            'surface_type.required'                          => 'بخش ۴: نوع سطح نصب را انتخاب کنید.',
+            'surface_orientation.required'                   => 'بخش ۴: وضعیت سطح (افقی/شیب‌دار) را انتخاب کنید.',
+            'panel_direction.required'                       => 'بخش ۴: جهت سطح نصب پنل را انتخاب کنید.',
+            'shading_level.required'                         => 'بخش ۴: میزان سایه‌اندازی را انتخاب کنید.',
+            'surface_condition.required'                     => 'بخش ۴: وضعیت سطح برای نصب پنل را انتخاب کنید.',
+
+            // بخش ۵
+            'structure_load_capacity.required'               => 'بخش ۵: وضعیت تحمل بار سازه را انتخاب کنید.',
+            'reinforcement_needed.required'                  => 'بخش ۵: نیاز به مقاوم‌سازی را مشخص کنید.',
+            'special_structure_needed.required'              => 'بخش ۵: نیاز به سازه خاص را مشخص کنید.',
+            'overall_risk_level.required'                    => 'بخش ۵: سطح ریسک کلی پروژه را انتخاب کنید.',
+
+            // بخش ۶
+            'electricity_type.required'                      => 'بخش ۶: نوع برق محل (تک‌فاز/سه‌فاز) را انتخاب کنید.',
+            'main_panel_accessible.required'                 => 'بخش ۶: دسترسی به تابلو برق اصلی را مشخص کنید.',
+            'main_panel_condition.required'                  => 'بخش ۶: وضعیت تابلو برق را انتخاب کنید.',
+            'electrical_installation_condition.required'     => 'بخش ۶: وضعیت کلی تأسیسات برق را انتخاب کنید.',
+            'grid_connection_possible.required'              => 'بخش ۶: امکان اتصال به شبکه را مشخص کنید.',
+            'electrical_fix_needed.required'                 => 'بخش ۶: نیاز به اصلاح تأسیسات برق را مشخص کنید.',
+
+            // بخش ۷
+            'has_emergency_load.required'                    => 'بخش ۷: نیاز به بار اضطراری را مشخص کنید.',
+
+            // بخش ۸
+            'inverter_location.required'                     => 'بخش ۸: وضعیت محل نصب اینورتر را انتخاب کنید.',
+            'battery_location.required'                      => 'بخش ۸: وضعیت محل نصب باتری را انتخاب کنید.',
+            'equipment_ventilation_ok.required'              => 'بخش ۸: تهویه محل تجهیزات را مشخص کنید.',
+            'cable_route_ok.required'                        => 'بخش ۸: وضعیت مسیر کابل‌کشی را مشخص کنید.',
+            'new_equipment_space_needed.required'            => 'بخش ۸: نیاز به ایجاد فضای جدید را مشخص کنید.',
+
+            // بخش ۹
+            'expert_proposed_capacity_kw.required'           => 'بخش ۹: ظرفیت پیشنهادی کارشناس الزامی است.',
+            'expert_proposed_capacity_kw.numeric'            => 'بخش ۹: ظرفیت پیشنهادی باید عدد باشد.',
+            'battery_required.required'                      => 'بخش ۹: نیاز به باتری را مشخص کنید.',
+
+            // بخش ۱۰
+            'pre_execution_fix_needed.required'              => 'بخش ۱۰: نیاز به اصلاح پیش از اجرا را مشخص کنید.',
+
+            // بخش ۱۱
+            'assessment_result.required'                     => 'بخش ۱۱: نتیجه ارزیابی اولیه الزامی است.',
+            'assessment_result.in'                           => 'بخش ۱۱: یکی از گزینه‌های نتیجه ارزیابی را انتخاب کنید.',
+
+            // بخش ۱۲
+            'expert_summary.required'                        => 'بخش ۱۲: جمع‌بندی کارشناسی الزامی است.',
+            'expert_summary.min'                             => 'بخش ۱۲: جمع‌بندی کارشناسی باید حداقل ۲۰ کاراکتر باشد.',
         ]);
     }
 }

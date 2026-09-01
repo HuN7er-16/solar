@@ -1,4 +1,4 @@
-<div class="card mb-4" style="border-radius:12px;border:2px solid #C5CAE9;box-shadow:0 4px 20px rgba(57,73,171,0.12);">
+﻿<div class="card mb-4" style="border-radius:12px;border:2px solid #C5CAE9;box-shadow:0 4px 20px rgba(57,73,171,0.12);">
     <div class="card-header d-flex align-items-center gap-3"
          style="background:linear-gradient(135deg,#3949AB,#283593);border-radius:10px 10px 0 0;border:none;">
         <div style="width:38px;height:38px;background:rgba(255,255,255,0.2);border-radius:10px;display:flex;align-items:center;justify-content:center;">
@@ -46,7 +46,7 @@
             </label>
             <textarea name="not_feasible_reason" rows="3"
                       class="form-control @error('not_feasible_reason') is-invalid @enderror"
-                      style="border-radius:8px;border:2px solid #FFCDD2;padding:10px 14px;"
+                      style="border-radius:8px;"
                       placeholder="لطفاً دلیل عدم امکان اجرای پروژه را به‌طور کامل توضیح دهید...">{{ old('not_feasible_reason') }}</textarea>
             @error('not_feasible_reason')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
         </div>
@@ -54,25 +54,4 @@
     </div>
 </div>
 
-@push('scripts')
-<script>
-// استایل انتخاب نتیجه
-document.querySelectorAll('.result-radio').forEach(function(radio) {
-    radio.addEventListener('change', function() {
-        document.querySelectorAll('.result-radio').forEach(function(r) {
-            var card = r.closest('label').querySelector('div');
-            card.style.borderColor = '#E0E0E0';
-            card.style.background  = '#FAFAFA';
-        });
-        var selected = this.closest('label').querySelector('div');
-        var colors = {
-            'feasible':          {border:'#A5D6A7', bg:'#E8F5E9'},
-            'feasible_with_fix': {border:'#FFE082', bg:'#FFFDE7'},
-            'not_feasible':      {border:'#FFCDD2', bg:'#FFEBEE'},
-        };
-        var c = colors[this.value];
-        if (c) { selected.style.borderColor = c.border; selected.style.background = c.bg; }
-    });
-});
-</script>
-@endpush
+
