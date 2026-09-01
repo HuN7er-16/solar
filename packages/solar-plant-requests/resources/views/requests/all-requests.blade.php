@@ -289,7 +289,7 @@
 
     <footer class="bg-gray-900 text-gray-100 mt-12">
         <div class="container px-6 py-6 flex flex-col md:flex-row items-center justify-between gap-4 text-sm">
-            <div>اتحادیه کشوری سوخت‌های جایگزین و خدمات وابسته</div>
+            <div>اتحادیه کشوری سوخت‌های جایگزین و انرژی‌های تجدیدپذیر</div>
             <div class="flex gap-4">
                 <span>ایمیل: info@altfuel.ir</span>
             </div>

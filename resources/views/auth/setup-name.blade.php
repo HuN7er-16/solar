@@ -85,7 +85,7 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div>
                     <h3 class="font-bold text-lg mb-2 text-amber-600">سامانه ساتا اصناف</h3>
-                    <p class="text-sm text-gray-600 leading-6">سامانه رسمی اتحادیه کشوری سوخت‌های جایگزین و خدمات وابسته.</p>
+                    <p class="text-sm text-gray-600 leading-6">سامانه رسمی اتحادیه کشوری سوخت‌های جایگزین و انرژی‌های تجدیدپذیر.</p>
                 </div>
                 <div>
                     <h4 class="font-semibold mb-2 text-amber-600">تماس</h4>
@@ -98,7 +98,7 @@
                 </div>
             </div>
             <div class="text-center text-sm text-gray-500 mt-8 pt-6 border-t border-amber-100">
-                © تمامی حقوق متعلق به اتحادیه کشوری سوخت‌های جایگزین و خدمات وابسته است.
+                © تمامی حقوق متعلق به اتحادیه کشوری سوخت‌های جایگزین و انرژی‌های تجدیدپذیر است.
             </div>
         </div>
     </footer>
