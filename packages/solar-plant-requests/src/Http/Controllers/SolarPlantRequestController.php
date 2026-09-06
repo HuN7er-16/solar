@@ -74,7 +74,7 @@ class SolarPlantRequestController
                 ? convertPersianToEnglish($solarPlantRequest->mobile)
                 : $solarPlantRequest->mobile;
 
-            $message = "سامانه جامع اتحادیه سوخت‌های جایگزین و خدمات وابسته\nدرخواست نیروگاه خورشیدی شما با کد {$solarPlantRequest->unique_code} با موفقیت در سامانه ثبت شد.\nجهت پیگیری وضعیت از پنل کاربری خود وارد شوید.";
+            $message = "سامانه جامع انرژی‌های تجدیدپذیر و خورشیدی اصناف (ساتا اصناف)\nدرخواست نیروگاه خورشیدی شما با کد {$solarPlantRequest->unique_code} با موفقیت در سامانه ثبت شد.\nجهت پیگیری وضعیت از پنل کاربری خود وارد شوید.";
 
             if ($mobile) {
                 SmsController::send($mobile, $message);
