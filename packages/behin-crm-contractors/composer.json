@@ -1,0 +1,21 @@
+{
+    "name": "behin/crm-contractors",
+    "description": "CRM contractor synchronization package for solar energy systems",
+    "type": "library",
+    "require": {
+        "php": "^8.1",
+        "illuminate/support": "^10.0|^11.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "BehinCrmContractors\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "BehinCrmContractors\\CrmContractorsServiceProvider"
+            ]
+        }
+    }
+}

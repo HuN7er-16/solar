@@ -55,7 +55,9 @@
             "ProjectInspection\\": "packages/project-inspection/src/",
             "ExpertCatalog\\": "packages/expert-catalog/src/",
             "RequestExpertReview\\": "packages/request-expert-review/src/",
-            "ExpertInitialVisit\\": "packages/expert-initial-visit/src/"
+            "ExpertInitialVisit\\": "packages/expert-initial-visit/src/",
+            "Behin\\CrmClient\\": "packages/behin-crm-client/src/",
+            "BehinCrmContractors\\": "packages/behin-crm-contractors/src/"
         },
         "files": [
             "packages/behin-init/src/App/Helpers/behin-helpers.php"

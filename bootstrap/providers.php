@@ -27,4 +27,6 @@ return [
     ExpertCatalog\ExpertCatalogServiceProvider::class,
     RequestExpertReview\RequestExpertReviewServiceProvider::class,
     ExpertInitialVisit\ExpertInitialVisitServiceProvider::class,
+    Behin\CrmClient\CrmServiceProvider::class,
+    BehinCrmContractors\CrmContractorsServiceProvider::class,
 ];

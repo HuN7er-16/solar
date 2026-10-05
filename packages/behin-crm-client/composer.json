@@ -1,0 +1,17 @@
+{
+    "name": "behin/crm-client",
+    "description": "CRM web service client helpers for Behin projects",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Behin\\CrmClient\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Behin\\CrmClient\\CrmServiceProvider"
+            ]
+        }
+    }
+}
