@@ -87,6 +87,37 @@ class ExpertRequestController
     }
 
     /**
+     * تایید نهایی کارشناس — وضعیت به awaiting_user_approval می‌رود
+     * متقاضی باید گزارش را ببیند و تایید کند
+     */
+    public function approve(Request $request, SolarPlantRequest $solarPlantRequest): RedirectResponse
+    {
+        abort_unless($this->canAccess(), 403, 'شما دسترسی به این عملیات ندارید.');
+
+        if (! $this->isLeader()) {
+            abort_unless(
+                $solarPlantRequest->expert_user_id === Auth::id(),
+                403,
+                'این تقاضا به شما اختصاص داده نشده است.'
+            );
+        }
+
+        abort_unless(
+            $solarPlantRequest->status === SolarPlantRequestStatus::UNDER_REVIEW,
+            422,
+            'تایید کارشناسی فقط برای تقاضاهای در مرحله بررسی کارشناسی امکان‌پذیر است.'
+        );
+
+        $solarPlantRequest->update([
+            'status' => SolarPlantRequestStatus::AWAITING_USER_APPROVAL,
+        ]);
+
+        return redirect()
+            ->route('request-expert-review.expert.index')
+            ->with('success', 'گزارش کارشناسی با موفقیت ثبت شد. منتظر تایید متقاضی هستیم.');
+    }
+
+    /**
      * ذخیره ویرایش‌های کارشناس روی فیلدهای فنی تقاضا
      * اطلاعات شخصی متقاضی قابل ویرایش نیست
      */

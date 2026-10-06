@@ -3,6 +3,7 @@
 namespace SolarPlantRequests\Models;
 
 use App\Models\User;
+use ContractorCatalog\Models\Contractor;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -45,26 +46,40 @@ class SolarPlantRequest extends Model
         'images',
         'documents',
         'unique_code',
-        'contractor_id',
+        'status',
+        // تایید متقاضی
+        'user_approval_status',
+        'user_rejection_reason',
+        'user_approved_at',
+        // پکیج انتخابی
+        'selected_package_id',
+        'selected_package_price',
+        'selected_package_title',
+        // پیمانکار (از جدول contractors)
+        'selected_contractor_id',
         'contractor_name',
+        // فیلدهای قدیمی - حفظ برای سازگاری
+        'contractor_id',
+        // کارشناس و بازرس
         'inspector_user_id',
         'inspector_name',
         'expert_user_id',
         'expert_name',
-        'status',
     ];
 
     protected $casts = [
-        'applicant_type' => ApplicantType::class,
-        'usage_type' => UsageType::class,
-        'surface_type' => SurfaceType::class,
-        'purpose' => PurposeType::class,
-        'status' => SolarPlantRequestStatus::class,
-        'is_shared_property' => 'boolean',
-        'has_three_phase' => 'boolean',
-        'wants_loan' => 'boolean',
-        'images' => 'array',
-        'documents' => 'array',
+        'applicant_type'         => ApplicantType::class,
+        'usage_type'             => UsageType::class,
+        'surface_type'           => SurfaceType::class,
+        'purpose'                => PurposeType::class,
+        'status'                 => SolarPlantRequestStatus::class,
+        'is_shared_property'     => 'boolean',
+        'has_three_phase'        => 'boolean',
+        'wants_loan'             => 'boolean',
+        'images'                 => 'array',
+        'documents'              => 'array',
+        'selected_package_price' => 'integer',
+        'user_approved_at'       => 'datetime',
     ];
 
     protected $appends = ['status_label'];
@@ -80,20 +95,35 @@ class SolarPlantRequest extends Model
 
     public static function generateUniqueCode(): string
     {
-        $prefix = 'SPR';
+        $prefix    = 'SPR';
         $timestamp = time();
-        $random = strtoupper(substr(bin2hex(random_bytes(3)), 0, 4));
+        $random    = strtoupper(substr(bin2hex(random_bytes(3)), 0, 4));
+
         return $prefix . $timestamp . $random;
     }
+
+    // ─── Relations ────────────────────────────────────────────────
 
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
+    /** پیمانکار از جدول contractors (جدید) */
+    public function selectedContractor(): BelongsTo
+    {
+        return $this->belongsTo(Contractor::class, 'selected_contractor_id');
+    }
+
+    /** حفظ سازگاری با کد قدیمی که contractor_id به users اشاره می‌کرد */
     public function contractor(): BelongsTo
     {
         return $this->belongsTo(User::class, 'contractor_id');
+    }
+
+    public function selectedPackage(): BelongsTo
+    {
+        return $this->belongsTo(SolarPlantPackage::class, 'selected_package_id');
     }
 
     public function inspector(): BelongsTo
@@ -121,6 +151,8 @@ class SolarPlantRequest extends Model
         return $this->hasMany(Battery::class, 'solar_plant_request_id');
     }
 
+    // ─── Scopes ───────────────────────────────────────────────────
+
     public function scopeVisibleTo(Builder $query, User $user): Builder
     {
         if (self::userHasRole($user, 'leader')) {
@@ -143,6 +175,8 @@ class SolarPlantRequest extends Model
 
         return $query->where('user_id', $user->id);
     }
+
+    // ─── Helpers ──────────────────────────────────────────────────
 
     public static function userHasRole(User $user, string $roleKey): bool
     {

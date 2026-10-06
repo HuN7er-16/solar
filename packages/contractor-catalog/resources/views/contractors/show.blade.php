@@ -76,6 +76,35 @@
         </div>
 
         <div class="row g-4 mb-4">
+            {{-- کارت کاربر سیستم --}}
+            @if ($contractor->user)
+            <div class="col-12">
+                <div class="p-4" style="background: linear-gradient(135deg, #EDE7F6 0%, #D1C4E9 100%); border-radius: 12px; border-right: 4px solid #7986CB;">
+                    <div class="d-flex align-items-center gap-3 flex-wrap">
+                        <div class="d-flex align-items-center justify-content-center" style="width: 44px; height: 44px; background: linear-gradient(135deg, #7986CB 0%, #3F51B5 100%); border-radius: 12px; flex-shrink:0;">
+                            <i class="fa fa-user-circle text-white" style="font-size: 18px;"></i>
+                        </div>
+                        <div>
+                            <small class="text-muted fw-semibold d-block">کاربر سیستم (نقش پیمانکار)</small>
+                            <span class="fw-bold" style="color: #283593; font-size: 17px;">{{ $contractor->user->name }}</span>
+                        </div>
+                        @if ($contractor->user->email)
+                        <div class="me-4">
+                            <small class="text-muted fw-semibold d-block">ایمیل</small>
+                            <span style="color: #37474F;">{{ $contractor->user->email }}</span>
+                        </div>
+                        @endif
+                        @if ($contractor->user->phone)
+                        <div>
+                            <small class="text-muted fw-semibold d-block">شماره تماس</small>
+                            <span style="color: #37474F; font-family: monospace;">{{ $contractor->user->phone }}</span>
+                        </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+            @endif
+
             <div class="col-md-4">
                 <div class="p-4 h-100" style="background: linear-gradient(135deg, #FFF8E1 0%, #FFECB3 100%); border-radius: 12px; border-right: 4px solid #FFB300; box-shadow: 0 4px 15px rgba(255, 179, 0, 0.15);">
                     <div class="d-flex align-items-center mb-4">

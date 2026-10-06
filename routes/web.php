@@ -149,7 +149,8 @@ Route::get('migrate-catalogs', function(){
         // base_path('packages/expert-initial-visit/src/Database/Migrations'),
         base_path('packages/behin-crm-client/src/Database/Migrations'),
         base_path('packages/behin-crm-contractors/src/Database/Migrations'),
-
+        base_path('packages/solar-plant-requests/src/Database/Migrations'),
+        base_path('packages/contractor-catalog/src/Database/Migrations'),
     ];
 
     $logs = [];

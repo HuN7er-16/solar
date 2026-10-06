@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+use SolarPlantRequests\Enums\SolarPlantRequestStatus;
 use SolarPlantRequests\Models\SolarPlantRequest;
 
 class ExpertInitialVisitController
@@ -149,11 +150,19 @@ class ExpertInitialVisitController
 
             // ذخیره تصاویر
             $this->savePhotos($visit->id, $request);
+
+            // تغییر وضعیت تقاضا به «منتظر تایید متقاضی»
+            // فقط اگر تقاضا هنوز در مرحله بررسی کارشناسی باشد
+            if ($solarPlantRequest->status === SolarPlantRequestStatus::UNDER_REVIEW) {
+                $solarPlantRequest->update([
+                    'status' => SolarPlantRequestStatus::AWAITING_USER_APPROVAL,
+                ]);
+            }
         });
 
         return redirect()
             ->route('expert-initial-visit.index')
-            ->with('success', 'فرم بازدید اولیه با موفقیت ثبت و ارسال شد.');
+            ->with('success', 'گزارش بازدید اولیه با موفقیت ثبت شد. منتظر تایید متقاضی هستیم.');
     }
 
     // ----------------------------------------------------------------

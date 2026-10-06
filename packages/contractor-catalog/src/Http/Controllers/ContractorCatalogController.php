@@ -2,17 +2,20 @@
 
 namespace ContractorCatalog\Http\Controllers;
 
+use App\Models\User;
+use ContractorCatalog\Models\Contractor;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use ContractorCatalog\Models\Contractor;
+use Illuminate\Support\Facades\DB;
 
 class ContractorCatalogController
 {
     public function index(): View
     {
         $contractors = Contractor::query()
+            ->with('user')
             ->orderBy('created_at', 'desc')
             ->paginate(20);
 
@@ -23,7 +26,13 @@ class ContractorCatalogController
     {
         $provinces = Contractor::getProvinces();
 
-        return view('contractor-catalog::contractors.create', compact('provinces'));
+        // کاربرانی که هنوز پروفایل پیمانکار ندارند
+        $users = User::query()
+            ->whereNotIn('id', Contractor::query()->pluck('user_id')->filter())
+            ->orderBy('name')
+            ->get();
+
+        return view('contractor-catalog::contractors.create', compact('provinces', 'users'));
     }
 
     public function store(Request $request): RedirectResponse
@@ -36,6 +45,7 @@ class ContractorCatalogController
         }
 
         $validated = $request->validate([
+            'user_id'                   => ['required', 'exists:users,id', 'unique:contractors,user_id'],
             'company_name'              => ['required', 'string', 'max:255'],
             'national_id'               => ['required', 'string', 'size:11', 'unique:contractors,national_id'],
             'ceo_name'                  => ['required', 'string', 'max:255'],
@@ -52,6 +62,9 @@ class ContractorCatalogController
             'license_expiry_date'       => ['required', 'date', 'after:license_issue_date'],
             'registered_projects_count' => ['nullable', 'integer', 'min:0'],
         ], [
+            'user_id.required'               => 'انتخاب کاربر الزامی است.',
+            'user_id.exists'                 => 'کاربر انتخاب‌شده وجود ندارد.',
+            'user_id.unique'                 => 'این کاربر قبلاً به عنوان پیمانکار ثبت شده است.',
             'company_name.required'          => 'نام شرکت الزامی است.',
             'national_id.required'           => 'شناسه ملی شرکت الزامی است.',
             'national_id.size'               => 'شناسه ملی باید ۱۱ رقم باشد.',
@@ -76,7 +89,14 @@ class ContractorCatalogController
 
         $validated['registered_projects_count'] = $validated['registered_projects_count'] ?? 0;
 
-        Contractor::query()->create($validated);
+        DB::transaction(function () use ($validated) {
+            // تنظیم نقش پیمانکار (id=2) روی کاربر انتخاب‌شده
+            User::query()
+                ->where('id', $validated['user_id'])
+                ->update(['role_id' => 2]);
+
+            Contractor::query()->create($validated);
+        });
 
         return redirect()
             ->route('contractor-catalog.index')
@@ -85,14 +105,26 @@ class ContractorCatalogController
 
     public function show(Contractor $contractor): View
     {
+        $contractor->load('user');
+
         return view('contractor-catalog::contractors.show', compact('contractor'));
     }
 
     public function edit(Contractor $contractor): View
     {
+        $contractor->load('user');
         $provinces = Contractor::getProvinces();
 
-        return view('contractor-catalog::contractors.edit', compact('contractor', 'provinces'));
+        // کاربرانی که پیمانکار نیستند + کاربر فعلی این پیمانکار
+        $users = User::query()
+            ->where(function ($q) use ($contractor) {
+                $q->whereNotIn('id', Contractor::query()->pluck('user_id')->filter())
+                  ->orWhere('id', $contractor->user_id);
+            })
+            ->orderBy('name')
+            ->get();
+
+        return view('contractor-catalog::contractors.edit', compact('contractor', 'provinces', 'users'));
     }
 
     public function update(Request $request, Contractor $contractor): RedirectResponse
@@ -105,6 +137,7 @@ class ContractorCatalogController
         }
 
         $validated = $request->validate([
+            'user_id'                   => ['required', 'exists:users,id', 'unique:contractors,user_id,' . $contractor->id],
             'company_name'              => ['required', 'string', 'max:255'],
             'national_id'               => ['required', 'string', 'size:11', 'unique:contractors,national_id,' . $contractor->id],
             'ceo_name'                  => ['required', 'string', 'max:255'],
@@ -121,16 +154,28 @@ class ContractorCatalogController
             'license_expiry_date'       => ['required', 'date', 'after:license_issue_date'],
             'registered_projects_count' => ['nullable', 'integer', 'min:0'],
         ], [
-            'national_id.size'           => 'شناسه ملی باید ۱۱ رقم باشد.',
-            'national_id.unique'         => 'این شناسه ملی قبلاً ثبت شده است.',
-            'ceo_national_code.size'     => 'کد ملی باید ۱۰ رقم باشد.',
-            'ceo_mobile.size'            => 'شماره موبایل باید ۱۱ رقم باشد.',
-            'contact_person_mobile.size' => 'شماره موبایل باید ۱۱ رقم باشد.',
-            'license_number.unique'      => 'این شماره پروانه کسب قبلاً ثبت شده است.',
-            'license_expiry_date.after'  => 'تاریخ انقضا باید بعد از تاریخ صدور باشد.',
+            'user_id.required'          => 'انتخاب کاربر الزامی است.',
+            'user_id.exists'            => 'کاربر انتخاب‌شده وجود ندارد.',
+            'user_id.unique'            => 'این کاربر قبلاً به عنوان پیمانکار ثبت شده است.',
+            'national_id.size'          => 'شناسه ملی باید ۱۱ رقم باشد.',
+            'national_id.unique'        => 'این شناسه ملی قبلاً ثبت شده است.',
+            'ceo_national_code.size'    => 'کد ملی باید ۱۰ رقم باشد.',
+            'ceo_mobile.size'           => 'شماره موبایل باید ۱۱ رقم باشد.',
+            'contact_person_mobile.size'=> 'شماره موبایل باید ۱۱ رقم باشد.',
+            'license_number.unique'     => 'این شماره پروانه کسب قبلاً ثبت شده است.',
+            'license_expiry_date.after' => 'تاریخ انقضا باید بعد از تاریخ صدور باشد.',
         ]);
 
-        $contractor->update($validated);
+        DB::transaction(function () use ($validated, $contractor) {
+            // اگر کاربر عوض شد، نقش پیمانکار را روی کاربر جدید تنظیم کن
+            if ((string) $validated['user_id'] !== (string) $contractor->user_id) {
+                User::query()
+                    ->where('id', $validated['user_id'])
+                    ->update(['role_id' => 2]);
+            }
+
+            $contractor->update($validated);
+        });
 
         return redirect()
             ->route('contractor-catalog.index')
@@ -139,11 +184,12 @@ class ContractorCatalogController
 
     public function destroy(Contractor $contractor): RedirectResponse
     {
+        // فقط پروفایل پیمانکار حذف می‌شود، حساب کاربری دست‌نخورده می‌ماند
         $contractor->delete();
 
         return redirect()
             ->route('contractor-catalog.index')
-            ->with('success', 'پیمانکار با موفقیت حذف شد.');
+            ->with('success', 'پروفایل پیمانکار با موفقیت حذف شد.');
     }
 
     public function lastRecord(): JsonResponse

@@ -2,13 +2,16 @@
 
 namespace ContractorCatalog\Models;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Contractor extends Model
 {
     protected $table = 'contractors';
 
     protected $fillable = [
+        'user_id',
         'company_name',
         'national_id',
         'ceo_name',
@@ -27,22 +30,24 @@ class Contractor extends Model
     ];
 
     protected $casts = [
-        'license_issue_date' => 'date',
-        'license_expiry_date' => 'date',
+        'license_issue_date'        => 'date',
+        'license_expiry_date'       => 'date',
         'registered_projects_count' => 'integer',
     ];
 
-    /**
-     * Check if the license is still valid
-     */
+    /** رابطه با کاربر مرتبط */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /** آیا پروانه معتبر است؟ */
     public function getIsLicenseValidAttribute(): bool
     {
         return $this->license_expiry_date && $this->license_expiry_date->isFuture();
     }
 
-    /**
-     * Get available provinces
-     */
+    /** لیست استان‌ها */
     public static function getProvinces(): array
     {
         return config('contractor-catalog.provinces', []);

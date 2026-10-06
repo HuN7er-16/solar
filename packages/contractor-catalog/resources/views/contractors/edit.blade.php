@@ -38,16 +38,52 @@
                     @csrf
                     @method('PUT')
 
+                    {{-- ─── انتخاب کاربر ─── --}}
                     <fieldset class="mb-5">
                         <div class="d-flex align-items-center mb-4">
-                            <div class="me-3 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; background: linear-gradient(135deg, #64B5F6 0%, #1976D2 100%); border-radius: 12px;">
-                                <i class="fa fa-building text-white" style="font-size: 20px;"></i>
+                            <div class="me-3 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; background: linear-gradient(135deg, #7986CB 0%, #3F51B5 100%); border-radius: 12px;">
+                                <i class="fa fa-user-circle text-white" style="font-size: 20px;"></i>
                             </div>
                             <div>
-                                <h5 class="mb-0 fw-bold" style="color: #1565C0;">اطلاعات شرکت</h5>
-                                <p class="mb-0 text-muted small">مشخصات هویتی و تماس شرکت</p>
+                                <h5 class="mb-0 fw-bold" style="color: #283593;">کاربر سیستم</h5>
+                                <p class="mb-0 text-muted small">کاربری که با این پیمانکار لینک می‌شود</p>
                             </div>
                         </div>
+                        <div style="height: 3px; background: linear-gradient(90deg, #7986CB, #3F51B5); border-radius: 3px; margin-bottom: 24px;"></div>
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold mb-2" style="color: #37474F;">انتخاب کاربر <span class="text-danger">*</span></label>
+                                <select name="user_id" id="user_id_select"
+                                        class="form-control form-control-lg select2 @error('user_id') is-invalid @enderror"
+                                        required
+                                        style="border-radius: 10px; border: 2px solid #E0E0E0;">
+                                    <option value="">-- انتخاب کاربر --</option>
+                                    @foreach ($users as $user)
+                                        <option value="{{ $user->id }}"
+                                            {{ old('user_id', $contractor->user_id) == $user->id ? 'selected' : '' }}>
+                                            {{ $user->name }}
+                                            @if ($user->phone) — {{ $user->phone }} @endif
+                                            @if ($user->email) — {{ $user->email }} @endif
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('user_id')
+                                    <div class="text-danger small mt-2"><i class="fa fa-exclamation-circle ms-1"></i>{{ $message }}</div>
+                                @enderror
+                            </div>
+                            @if ($contractor->user)
+                            <div class="col-md-6">
+                                <div class="p-3 rounded-3" style="background: #EDE7F6; border-right: 4px solid #7986CB;">
+                                    <small class="text-muted d-block mb-1 fw-semibold">کاربر فعلی</small>
+                                    <div class="fw-bold" style="color: #283593;">{{ $contractor->user->name }}</div>
+                                    @if ($contractor->user->email)
+                                    <small class="text-muted">{{ $contractor->user->email }}</small>
+                                    @endif
+                                </div>
+                            </div>
+                            @endif
+                        </div>
+                    </fieldset>
                         <div style="height: 3px; background: linear-gradient(90deg, #64B5F6, #1976D2, #FF9800); border-radius: 3px; margin-bottom: 24px;"></div>
                         <div class="row g-4">
                             <div class="col-md-4">
@@ -137,7 +173,7 @@
                         <div class="row g-4">
                             <div class="col-md-4">
                                 <label class="form-label fw-semibold mb-2" style="color: #37474F;">استان <span class="text-danger">*</span></label>
-                                <select name="province" class="form-control form-control-lg select2" required id="province_select" style="border-radius: 10px; border: 2px solid #E0E0E0; padding: 12px 16px; transition: all 0.2s;">
+                                <select name="province" class="form-control form-control-lg" required id="province_select" style="border-radius: 10px; border: 2px solid #E0E0E0; padding: 12px 16px; transition: all 0.2s;">
                                     <option value="">-- انتخاب کنید --</option>
                                     @foreach($provinces as $province)
                                         <option value="{{ $province }}" {{ old('province', $contractor->province) == $province ? 'selected' : '' }}>{{ $province }}</option>
@@ -147,7 +183,7 @@
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label fw-semibold mb-2" style="color: #37474F;">شهر <span class="text-danger">*</span></label>
-                                <select name="city" id="city_select" class="form-control form-control-lg select2 @error('city') is-invalid @enderror" required style="border-radius: 10px; border: 2px solid #E0E0E0; padding: 12px 16px;">
+                                <select name="city" id="city_select" class="form-control form-control-lg @error('city') is-invalid @enderror" required style="border-radius: 10px; border: 2px solid #E0E0E0; padding: 12px 16px;">
                                     <option value="{{ old('city', $contractor->city) }}">{{ old('city', $contractor->city) }}</option>
                                 </select>
                                 @error('city') <div class="text-danger small mt-2"><i class="fa fa-exclamation-circle ms-1"></i>{{ $message }}</div> @enderror
@@ -256,8 +292,19 @@
 @section('script')
 <script src="{{ url('behin/behin-js/province-city-picker.js') }}"></script>
 <script>
+    var citiesData = {!! json_encode(json_decode(file_get_contents(resource_path('data/cities.json')), true), JSON_UNESCAPED_UNICODE) !!};
+
     $(document).ready(function() {
-        initProvinceCityPicker('province_select', 'city_select', '{{ old('city', $contractor->city) }}');
+        // ─── ابتدا picker، بعد select2 ───
+        initProvinceCityPicker('province_select', 'city_select', '{{ old('city', $contractor->city) }}', citiesData);
+
+        // ─── select2 فقط روی user_id ───
+        $('#user_id_select').select2({
+            placeholder: 'جستجو کنید...',
+            allowClear: true,
+            width: '100%',
+            language: { noResults: function () { return 'نتیجه‌ای یافت نشد'; } }
+        });
     });
 </script>
 @endsection

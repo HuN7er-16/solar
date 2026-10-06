@@ -10,6 +10,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use Morilog\Jalali\Jalalian;
 use SolarPlantRequests\Enums\SolarPlantRequestStatus;
+use RequestExpertReview\Http\Controllers\ExpertGetController;
 use SolarPlantRequests\Http\Controllers\Contractor\GetController;
 use SolarPlantRequests\Models\SolarPlantRequest;
 
@@ -59,14 +60,16 @@ class AllSolarPlantRequestController
             ->get();
 
         $contractors = GetController::getAll();
+        $experts     = ExpertGetController::getAll();
 
         if ($request->wantsJson()) {
             return response()->json(['data' => $requests]);
         }
 
         return view('solar-plant-requests::requests.all-requests', [
-            'requests' => $requests,
+            'requests'    => $requests,
             'contractors' => $contractors,
+            'experts'     => $experts,
         ]);
     }
 

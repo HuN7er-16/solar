@@ -18,25 +18,20 @@
     @php
         use SolarPlantRequests\Enums\SolarPlantRequestStatus;
         $steps = [
-            'initial_registration'   => ['label' => 'ثبت اولیه',        'icon' => '📋', 'step' => 1],
-            'under_review'           => ['label' => 'بررسی درخواست',    'icon' => '🔍', 'step' => 2],
-            'contractor_assigned'    => ['label' => 'تخصیص پیمانکار',   'icon' => '👷', 'step' => 3],
-            'equipment_installation' => ['label' => 'نصب تجهیزات',      'icon' => '⚙️', 'step' => 4],
-            'inspection'             => ['label' => 'بازرسی',           'icon' => '🔎', 'step' => 5],
-            'certificate_issued'     => ['label' => 'صدور گواهی',       'icon' => '✅', 'step' => 6],
+            'initial_registration'   => ['label' => 'ثبت اولیه',          'icon' => '📋', 'step' => 1],
+            'under_review'           => ['label' => 'بررسی کارشناسی',     'icon' => '🔍', 'step' => 2],
+            'awaiting_user_approval' => ['label' => 'تایید گزارش',        'icon' => '✋', 'step' => 3],
+            'package_selection'      => ['label' => 'انتخاب پکیج',        'icon' => '📦', 'step' => 4],
+            'contractor_selection'   => ['label' => 'انتخاب پیمانکار',    'icon' => '👷', 'step' => 5],
+            'contractor_assigned'    => ['label' => 'آماده پروژه',        'icon' => '📝', 'step' => 6],
+            'equipment_installation' => ['label' => 'نصب تجهیزات',        'icon' => '⚙️', 'step' => 7],
+            'inspection'             => ['label' => 'بازرسی',             'icon' => '🔎', 'step' => 8],
+            'certificate_issued'     => ['label' => 'صدور گواهی',         'icon' => '✅', 'step' => 9],
         ];
         $allSteps    = array_values($steps);
         $currentStep = $steps[$req->status->value]['step'] ?? 1;
         $totalSteps  = count($allSteps);
-        $statusColors = [
-            'initial_registration'   => 'bg-gray-100 text-gray-700',
-            'under_review'           => 'bg-blue-100 text-blue-700',
-            'contractor_assigned'    => 'bg-purple-100 text-purple-700',
-            'equipment_installation' => 'bg-orange-100 text-orange-700',
-            'inspection'             => 'bg-yellow-100 text-yellow-700',
-            'certificate_issued'     => 'bg-green-100 text-green-700',
-        ];
-        $badgeClass = $statusColors[$req->status->value] ?? 'bg-gray-100 text-gray-700';
+        $badgeClass  = $req->status->badgeClass();
 
         $applicantLabels = ['individual' => 'شخص حقیقی', 'company' => 'شخص حقوقی', 'foreigner' => 'اتباع خارجی'];
         $usageLabels     = ['villa' => 'ویلایی', 'industrial' => 'صنعتی', 'commercial' => 'تجاری', 'agriculture' => 'کشاورزی', 'apartment' => 'آپارتمان'];
@@ -217,15 +212,29 @@
             </div>
         </div>
 
-        {{-- Contractor --}}
-        @if ($req->contractor_name)
+        {{-- پکیج و پیمانکار --}}
+        @if ($req->selected_package_title || $req->contractor_name)
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-                <h2 class="font-bold text-base mb-4 pb-2 border-b border-gray-100">اطلاعات پیمانکار</h2>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-                    <div>
-                        <p class="text-gray-400 mb-0.5">نام پیمانکار</p>
-                        <p class="font-medium">{{ $req->contractor_name }}</p>
+                <h2 class="font-bold text-base mb-4 pb-2 border-b border-gray-100">پکیج و پیمانکار</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+                    @if ($req->selected_package_title)
+                    <div class="sm:col-span-2">
+                        <p class="text-gray-400 mb-0.5">پکیج انتخاب‌شده</p>
+                        <p class="font-semibold">{{ $req->selected_package_title }}</p>
                     </div>
+                    @endif
+                    @if ($req->selected_package_price)
+                    <div>
+                        <p class="text-gray-400 mb-0.5">قیمت پکیج</p>
+                        <p class="font-bold text-amber-700" dir="ltr">{{ number_format($req->selected_package_price) }} ریال</p>
+                    </div>
+                    @endif
+                    @if ($req->contractor_name)
+                    <div>
+                        <p class="text-gray-400 mb-0.5">پیمانکار</p>
+                        <p class="font-semibold">{{ $req->contractor_name }}</p>
+                    </div>
+                    @endif
                 </div>
             </div>
         @endif

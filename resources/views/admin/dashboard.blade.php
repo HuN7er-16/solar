@@ -759,24 +759,52 @@
             </div>
         @endif
 
-        @if (auth()->user()->role_id == 5)
-            <div class="old-small-box-wrap">
-                <h4 class="role-section-title">بخش‌های پیمانکار</h4>
-                <div class="row g-3">
-                    <div class="col-sm-3">
-                        <div class="small-box ql-blue" style="color:white; padding: 1.25rem; border-radius: 12px;">
-                            <div class="inner">
-                                <h6 style="font-weight:700; margin:0;">{{ trans('درخواست ها') }}</h6>
-                                <p style="opacity:0.9; margin:0.3rem 0 0 0; font-size:0.85rem;">{{ trans('در مرحله نصب تجهیزات') }}</p>
+        @if (auth()->user()->role_id == 2)
+            <div class="quick-link-card">
+                <h3 class="section-title mb-4"><i class="fa fa-hard-hat ms-2" style="color:#FF9800;"></i>بخش پیمانکار</h3>
+
+                @php
+                    try {
+                        $contractorProjectsCount = 0;
+                        $contractor = \ContractorCatalog\Models\Contractor::where('user_id', auth()->id())->first();
+                        if ($contractor) {
+                            $contractorProjectsCount = \SolarPlantEquipment\Models\SolarProject::where('contractor_id', $contractor->id)->count();
+                        }
+                    } catch (\Throwable $e) {
+                        $contractorProjectsCount = 0;
+                    }
+                @endphp
+
+                {{-- آمار --}}
+                <div class="row g-4 mb-4">
+                    <div class="col-md-4 col-sm-6">
+                        <div class="stat-card" style="border-right: 4px solid #FF9800;">
+                            <div class="stat-icon-wrap" style="background:linear-gradient(135deg,#FFB74D,#FF9800);">
+                                <i class="fa fa-solar-panel" style="color:white;font-size:24px;"></i>
                             </div>
-                            <div class="icon" style="position:absolute; top:1rem; left:1rem; font-size:48px; opacity:0.3;">
-                                <i class="ion ion-bag"></i>
-                            </div>
-                            <a href="{{ route('solar-plant-requests.contractor.index') }}"
-                                class="small-box-footer" style="display:block; color:white; padding:0.6rem; background:rgba(0,0,0,0.15); text-align:center; margin-top:1rem; border-radius:8px; text-decoration:none;">
-                                {{ trans('مشاهده') }} <i class="fa fa-arrow-circle-left"></i>
-                            </a>
+                            <p class="stat-number" style="color:#E65100;">{{ $contractorProjectsCount }}</p>
+                            <p class="stat-label">پروژه تخصیص‌یافته</p>
                         </div>
+                    </div>
+                </div>
+
+                {{-- دکمه‌ها --}}
+                <div class="row g-3">
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                        <a href="{{ route('solar-plant-equipment.contractor.projects.index') }}"
+                           class="quick-link-btn ql-sun">
+                            <div class="ql-icon"><i class="fa fa-solar-panel"></i></div>
+                            <div class="ql-text">پروژه‌های من<small>مشاهده، ثبت تجهیزات و بروزرسانی اطلاعات پروژه</small></div>
+                            <i class="fa fa-angle-left ql-arrow"></i>
+                        </a>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                        <a href="{{ route('solar-plant-requests.contractor.index') }}"
+                           class="quick-link-btn ql-blue">
+                            <div class="ql-icon"><i class="fa fa-file-text-o"></i></div>
+                            <div class="ql-text">درخواست‌های نصب<small>درخواست‌های در مرحله نصب تجهیزات</small></div>
+                            <i class="fa fa-angle-left ql-arrow"></i>
+                        </a>
                     </div>
                 </div>
             </div>

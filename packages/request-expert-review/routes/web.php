@@ -14,9 +14,10 @@ Route::middleware(['web', 'auth'])->group(function () {
 
     // --- کارشناس: لیست و مدیریت تقاضاها ---
     Route::prefix('expert/requests')->name('request-expert-review.expert.')->group(function () {
-        Route::get('/',                           [ExpertRequestController::class, 'index'])->name('index');
-        Route::get('{solarPlantRequest}',         [ExpertRequestController::class, 'show'])->name('show');
-        Route::put('{solarPlantRequest}/update',  [ExpertRequestController::class, 'update'])->name('update');
+        Route::get('/',                                   [ExpertRequestController::class, 'index'])->name('index');
+        Route::get('{solarPlantRequest}',                 [ExpertRequestController::class, 'show'])->name('show');
+        Route::put('{solarPlantRequest}/update',          [ExpertRequestController::class, 'update'])->name('update');
+        Route::post('{solarPlantRequest}/approve',        [ExpertRequestController::class, 'approve'])->name('approve');
     });
 
 });

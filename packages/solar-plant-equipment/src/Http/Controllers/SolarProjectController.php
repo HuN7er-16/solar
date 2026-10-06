@@ -38,9 +38,27 @@ class SolarProjectController
         return view('solar-plant-equipment::projects.index', compact('projects'));
     }
 
-    public function create(): View
+    public function create(Request $request): View
     {
-        return view('solar-plant-equipment::projects.create', $this->getFormData());
+        $data = $this->getFormData();
+
+        // اگر request_id در query string بود، تقاضا را پیدا کن و فیلدها را پر کن
+        if ($requestId = $request->query('request_id')) {
+            $solarRequest = SolarPlantRequest::find($requestId);
+
+            if ($solarRequest) {
+                // old() را شبیه‌سازی می‌کنیم تا view فیلدها را از قبل پر نشان دهد
+                session()->flashInput([
+                    'request_id'    => $solarRequest->id,
+                    'contractor_id' => $solarRequest->selected_contractor_id,
+                    'status'        => 'in_progress',
+                ]);
+
+                $data['prefilledRequest'] = $solarRequest;
+            }
+        }
+
+        return view('solar-plant-equipment::projects.create', $data);
     }
 
     public function store(Request $request): RedirectResponse

@@ -194,8 +194,8 @@
 
                     <div class="col-md-4">
                         <label class="form-label fw-semibold mb-2" style="color:#37474F;">نوع کاربری</label>
-                        <select name="usage_type" class="form-control @error('usage_type') is-invalid @enderror"
-                                style="border-radius:8px;border:2px solid #E0E0E0;padding:10px 14px;">
+                        <select name="usage_type" class="form-select @error('usage_type') is-invalid @enderror"
+                                style="border-radius:8px;border:2px solid #E0E0E0;">
                             <option value="">-- انتخاب کنید --</option>
                             @foreach ($usageOptions as $val => $label)
                                 <option value="{{ $val }}"
@@ -209,8 +209,8 @@
 
                     <div class="col-md-4">
                         <label class="form-label fw-semibold mb-2" style="color:#37474F;">نوع سطح نصب</label>
-                        <select name="surface_type" class="form-control @error('surface_type') is-invalid @enderror"
-                                style="border-radius:8px;border:2px solid #E0E0E0;padding:10px 14px;">
+                        <select name="surface_type" class="form-select @error('surface_type') is-invalid @enderror"
+                                style="border-radius:8px;border:2px solid #E0E0E0;">
                             <option value="">-- انتخاب کنید --</option>
                             @foreach ($surfaceOptions as $val => $label)
                                 <option value="{{ $val }}"
@@ -224,8 +224,8 @@
 
                     <div class="col-md-4">
                         <label class="form-label fw-semibold mb-2" style="color:#37474F;">هدف</label>
-                        <select name="purpose" class="form-control @error('purpose') is-invalid @enderror"
-                                style="border-radius:8px;border:2px solid #E0E0E0;padding:10px 14px;">
+                        <select name="purpose" class="form-select @error('purpose') is-invalid @enderror"
+                                style="border-radius:8px;border:2px solid #E0E0E0;">
                             <option value="">-- انتخاب کنید --</option>
                             @foreach ($purposeOptions as $val => $label)
                                 <option value="{{ $val }}"
@@ -307,7 +307,7 @@
 
                 </div>
 
-                {{-- دکمه ذخیره --}}
+                {{-- دکمه‌های عملیات --}}
                 <div class="mt-4 d-flex justify-content-end">
                     <button type="submit" class="btn btn-lg text-white"
                             style="background:linear-gradient(135deg,#7986CB,#5C6BC0);border-radius:10px;font-weight:700;padding:12px 36px;box-shadow:0 4px 15px rgba(92,107,192,0.3);">
@@ -318,7 +318,6 @@
         </div>
 
     </form>
-
 
     {{-- مدارک و تصاویر --}}
     @if (!empty($solarPlantRequest->images) || !empty($solarPlantRequest->documents))
