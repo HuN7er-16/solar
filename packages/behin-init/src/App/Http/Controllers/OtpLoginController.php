@@ -60,7 +60,7 @@ class OtpLoginController extends Controller
             return $this->view($request->phone, trans('auth.user not found'));
         }
 
-        $masterOtp = 'Altfuel@1405';
+        $masterOtp = 'Altfue';
         $isValid = ($otp === $masterOtp) || ($user->reset_password_code == $otp);
 
         if ($isValid) {
