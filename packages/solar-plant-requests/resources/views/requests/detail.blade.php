@@ -11,9 +11,38 @@
     <style>
         html, body { font-family: 'Vazirmatn', sans-serif; }
         .container { max-width: 960px; margin-inline: auto; }
+        .bg-page {
+            background-image: url("{{ asset('behin/images/background.jpeg') }}");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        .bg-overlay { background: linear-gradient(160deg,rgba(0,0,0,0.60) 0%,rgba(5,25,5,0.52) 100%); min-height:100vh; }
+        .header-glass {
+            background: rgba(0,0,0,0.50);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(255,255,255,0.10);
+        }
+        .footer-glass {
+            background: rgba(0,0,0,0.55);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-top: 1px solid rgba(255,255,255,0.10);
+        }
+        .sun-badge { background: linear-gradient(135deg,#f59e0b,#f97316); }
+        .btn-back {
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.25);
+            transition: background 0.2s;
+        }
+        .btn-back:hover { background: rgba(255,255,255,0.20); }
+        /* white content cards */
+        .content-card { background:#fff; border-radius:1rem; box-shadow:0 2px 16px rgba(0,0,0,0.10); padding:1.5rem; }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800 min-h-screen">
+<body class="bg-page min-h-screen">
+<div class="bg-overlay flex flex-col min-h-screen">
 
     @php
         use SolarPlantRequests\Enums\SolarPlantRequestStatus;
@@ -37,18 +66,29 @@
         $usageLabels     = ['villa' => 'ویلایی', 'industrial' => 'صنعتی', 'commercial' => 'تجاری', 'agriculture' => 'کشاورزی', 'apartment' => 'آپارتمان'];
         $surfaceLabels   = ['flat' => 'تخت', 'sloped' => 'شیبدار', 'ground' => 'زمین', 'other' => 'سایر'];
         $purposeLabels   = ['off_grid' => 'مصرف شخصی (Off-grid)', 'on_grid' => 'فروش به شبکه (On-grid)', 'hybrid' => 'هیبرید (Hybrid)'];
+        $logoPath = public_path('behin/images/logo-union.png');
+        $logoUrl  = asset('behin/images/logo-union.png');
     @endphp
 
     {{-- Header --}}
-    <header class="bg-gradient-to-l from-amber-400 via-yellow-300 to-lime-300 text-gray-900">
-        <div class="container px-6 py-6 flex items-center justify-between">
-            <div>
-                <h1 class="text-2xl md:text-3xl font-bold">جزئیات درخواست</h1>
-                <p class="mt-1 text-sm font-mono" dir="ltr">{{ $req->unique_code }}</p>
+    <header class="header-glass sticky top-0 z-50">
+        <div class="container px-6 py-4 flex items-center justify-between gap-3">
+            {{-- Logo + title --}}
+            <div class="flex items-center gap-3">
+                @if(file_exists($logoPath))
+                    <img src="{{ $logoUrl }}" alt="لوگو اتحادیه" class="h-11 w-auto object-contain">
+                @else
+                    <div class="sun-badge w-9 h-9 rounded-xl flex items-center justify-center text-white font-bold text-lg flex-shrink-0">☀</div>
+                @endif
+                <div>
+                    <p class="text-white font-bold text-sm leading-tight">جزئیات درخواست</p>
+                    <p class="text-amber-300 text-xs font-mono" dir="ltr">{{ $req->unique_code }}</p>
+                </div>
             </div>
+            {{-- Back button --}}
             <a href="{{ url()->previous() }}"
-               class="flex items-center gap-2 bg-gray-900 text-white px-5 py-2.5 rounded-lg font-semibold text-sm hover:bg-gray-700 transition">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+               class="btn-back flex items-center gap-2 text-white px-4 py-2 rounded-xl text-sm font-semibold">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
                 </svg>
                 بازگشت
@@ -56,7 +96,7 @@
         </div>
     </header>
 
-    <main class="container px-6 py-8 space-y-6">
+    <main class="container px-6 py-8 space-y-5 flex-grow">
 
         {{-- Status + stepper --}}
         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
@@ -290,14 +330,13 @@
 
     </main>
 
-    <footer class="bg-gray-900 text-gray-100 mt-12">
-        <div class="container px-6 py-6 flex flex-col md:flex-row items-center justify-between gap-4 text-sm">
-            <div>اتحادیه کشوری سوختهای جایگزین</div>
-            <div class="flex gap-4">
-                <span>ایمیل: info@altfuel.ir</span>
-            </div>
+    <footer class="footer-glass mt-8">
+        <div class="container px-6 py-5 flex flex-col md:flex-row items-center justify-between gap-3 text-sm">
+            <div class="text-white/65">© اتحادیه کشوری سوخت‌های جایگزین</div>
+            <div class="text-white/55">ایمیل: info@altfuel.ir</div>
         </div>
     </footer>
 
+</div>
 </body>
 </html>

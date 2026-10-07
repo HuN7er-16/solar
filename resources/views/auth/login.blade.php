@@ -163,7 +163,15 @@
     <header class="header-glass">
         <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
             <div class="flex items-center gap-3">
-                <div class="sun-badge w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-lg flex-shrink-0">☀</div>
+                @php
+                    $logoPath = public_path('behin/images/logo-union.png');
+                    $logoUrl  = asset('behin/images/logo-union.png');
+                @endphp
+                @if(file_exists($logoPath))
+                    <img src="{{ $logoUrl }}" alt="لوگو اتحادیه" class="h-12 w-auto object-contain">
+                @else
+                    <div class="sun-badge w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-lg flex-shrink-0">☀</div>
+                @endif
                 <div>
                     <p class="text-white font-bold text-sm leading-tight">سامانه جامع انرژی‌های تجدیدپذیر</p>
                     <p class="text-amber-300 text-xs">اتحادیه کشوری سوخت‌های جایگزین</p>

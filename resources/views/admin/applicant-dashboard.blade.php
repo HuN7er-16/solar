@@ -28,16 +28,6 @@
             -webkit-backdrop-filter: blur(14px);
             border-bottom: 1px solid rgba(255,255,255,0.10);
         }
-        .footer-glass {
-            background: rgba(0,0,0,0.55);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-top: 1px solid rgba(255,255,255,0.10);
-        }
-        .sun-badge {
-            background: linear-gradient(135deg, #f59e0b, #f97316);
-            box-shadow: 0 4px 20px rgba(245,158,11,0.5);
-        }
         /* Welcome banner */
         .welcome-banner {
             background: linear-gradient(135deg, rgba(245,158,11,0.85) 0%, rgba(249,115,22,0.85) 100%);
@@ -155,7 +145,7 @@
                     $logoUrl  = asset('behin/images/logo-union.png');
                 @endphp
                 @if(file_exists($logoPath))
-                    <img src="{{ $logoUrl }}" alt="لوگو اتحادیه" class="h-11 w-auto object-contain hidden sm:block">
+                    <img src="{{ $logoUrl }}" alt="لوگو اتحادیه" class="h-11 w-auto object-contain">
                 @else
                     <div class="sun-badge w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-lg flex-shrink-0">☀</div>
                 @endif

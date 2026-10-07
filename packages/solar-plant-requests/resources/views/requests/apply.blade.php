@@ -11,58 +11,70 @@
     <script src="{{ url('behin/behin-dist/dist/js/tailwind-3.4.17.min.js') }}"></script>
     <link href="{{ url('behin/behin-dist/css/css2.css') }}?family=Vazirmatn:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
-        html,
-        body {
-            font-family: 'Vazirmatn', sans-serif;
-        }
+        html, body { font-family: 'Vazirmatn', sans-serif; }
+        .container { max-width: 900px; margin-inline: auto; }
 
-        .container {
-            max-width: 900px;
-            margin-inline: auto;
+        .bg-page {
+            background-image: url("{{ asset('behin/images/background.jpeg') }}");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
         }
+        .bg-overlay { background: linear-gradient(160deg,rgba(0,0,0,0.62) 0%,rgba(5,25,5,0.54) 100%); min-height:100vh; }
+        .header-glass {
+            background: rgba(0,0,0,0.50);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(255,255,255,0.10);
+        }
+        .footer-glass {
+            background: rgba(0,0,0,0.55);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-top: 1px solid rgba(255,255,255,0.10);
+        }
+        .sun-badge { background: linear-gradient(135deg,#f59e0b,#f97316); }
+        .btn-back {
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.25);
+            transition: background 0.2s;
+        }
+        .btn-back:hover { background: rgba(255,255,255,0.20); }
 
-        .step {
-            display: none;
-        }
-
-        .step.active {
-            display: block;
-        }
-
-        .step-indicator {
-            transition: all 0.3s ease;
-        }
-
-        .step-indicator.active {
-            background-color: #f59e0b;
-            color: white;
-        }
-
-        .step-indicator.completed {
-            background-color: #22c55e;
-            color: white;
-        }
-
-        .step-connector {
-            transition: background-color 0.3s ease;
-        }
-
-        .step-connector.active {
-            background-color: #22c55e;
-        }
+        .step { display: none; }
+        .step.active { display: block; }
+        .step-indicator { transition: all 0.3s ease; }
+        .step-indicator.active { background-color: #f59e0b; color: white; }
+        .step-indicator.completed { background-color: #22c55e; color: white; }
+        .step-connector { transition: background-color 0.3s ease; }
+        .step-connector.active { background-color: #22c55e; }
     </style>
 </head>
 
-<body class="bg-gray-50 text-gray-800 min-h-screen">
-    <header class="bg-gradient-to-l from-amber-400 via-yellow-300 to-lime-300 text-gray-900">
-        <div class="container px-6 py-8 flex items-center justify-between">
-            <div>
-                <h1 class="text-2xl md:text-3xl font-bold">ثبت درخواست نیروگاه خورشیدی</h1>
-                <p class="mt-2 text-sm md:text-base">لطفاً اطلاعات زیر را در ۴ مرحله تکمیل کنید.</p>
+<body class="bg-page min-h-screen">
+<div class="bg-overlay flex flex-col min-h-screen">
+
+    {{-- Header --}}
+    <header class="header-glass sticky top-0 z-50">
+        <div class="container px-6 py-4 flex items-center justify-between gap-3">
+            @php
+                $logoPath = public_path('behin/images/logo-union.png');
+                $logoUrl  = asset('behin/images/logo-union.png');
+            @endphp
+            <div class="flex items-center gap-3">
+                @if(file_exists($logoPath))
+                    <img src="{{ $logoUrl }}" alt="لوگو اتحادیه" class="h-11 w-auto object-contain">
+                @else
+                    <div class="sun-badge w-9 h-9 rounded-xl flex items-center justify-center text-white font-bold text-lg flex-shrink-0">☀</div>
+                @endif
+                <div>
+                    <p class="text-white font-bold text-sm leading-tight">ثبت درخواست نیروگاه خورشیدی</p>
+                    <p class="text-amber-300 text-xs">لطفاً اطلاعات را در ۴ مرحله تکمیل کنید</p>
+                </div>
             </div>
             <a href="{{ route('solar-plant-requests.index') }}"
-               class="flex items-center gap-2 bg-gray-900 text-white px-5 py-2.5 rounded-lg font-semibold text-sm hover:bg-gray-700 transition">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+               class="btn-back flex items-center gap-2 text-white px-4 py-2 rounded-xl text-sm font-semibold">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
                 </svg>
                 بازگشت
@@ -555,15 +567,14 @@
         </form>
     </main>
 
-    <footer class="bg-gray-900 text-gray-100 mt-12">
-        <div class="container px-6 py-6 flex flex-col md:flex-row items-center justify-between gap-4 text-sm">
-            <div>اتحادیه کشوری سوختهای جایگزین</div>
-            <div class="flex gap-4">
-                <!-- <span>پشتیبانی: 021-91307571</span> -->
-                <span>ایمیل: info@altfuel.ir</span>
-            </div>
+    <footer class="footer-glass mt-8">
+        <div class="container px-6 py-5 flex flex-col md:flex-row items-center justify-between gap-3 text-sm">
+            <div class="text-white/65">اتحادیه کشوری سوخت‌های جایگزین</div>
+            <div class="text-white/55">ایمیل: info@altfuel.ir</div>
         </div>
     </footer>
+
+</div>
 
     <script>
         let currentStep = 1;
