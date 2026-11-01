@@ -25,9 +25,10 @@ $stepsMap = [
     'package_selection'      => ['label' => 'انتخاب پکیج',      'icon' => '📦', 'step' => 4],
     'contractor_selection'   => ['label' => 'انتخاب پیمانکار',  'icon' => '👷', 'step' => 5],
     'contractor_assigned'    => ['label' => 'آماده پروژه',      'icon' => '📝', 'step' => 6],
-    'equipment_installation' => ['label' => 'نصب تجهیزات',      'icon' => '⚙️', 'step' => 7],
-    'inspection'             => ['label' => 'بازرسی',           'icon' => '🔎', 'step' => 8],
-    'certificate_issued'     => ['label' => 'صدور گواهی',       'icon' => '✅', 'step' => 9],
+    'awaiting_project_approval' => ['label' => 'تایید پروژه',   'icon' => '🏗️', 'step' => 7],
+    'equipment_installation' => ['label' => 'نصب تجهیزات',      'icon' => '⚙️', 'step' => 8],
+    'inspection'             => ['label' => 'بازرسی',           'icon' => '🔎', 'step' => 9],
+    'certificate_issued'     => ['label' => 'صدور گواهی',       'icon' => '✅', 'step' => 10],
 ];
 $allSteps = array_values($stepsMap);
 @endphp
@@ -264,6 +265,28 @@ $allSteps = array_values($stepsMap);
                 </a>
                 @endif
 
+                {{-- ─── ویرایش پروژه (وقتی متقاضی رد کرده و وضعیت برگشته به contractor_assigned) ─── --}}
+                @if ($req->status === SolarPlantRequestStatus::AWAITING_PROJECT_APPROVAL)
+                <span class="inline-flex items-center gap-1.5 text-xs bg-teal-50 border border-teal-300 text-teal-700 px-3 py-1.5 rounded-lg font-semibold">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    در انتظار تایید متقاضی
+                </span>
+                @endif
+
+                {{-- ─── پروژه رد شده، ویرایش کن (وضعیت دوباره contractor_assigned بعد از رد متقاضی) ─── --}}
+                @if ($req->status === SolarPlantRequestStatus::CONTRACTOR_ASSIGNED && $req->project_approval_status === 'rejected')
+                <button type="button"
+                        onclick="openRejectionModal('{{ addslashes($req->project_rejection_reason ?? '') }}')"
+                        class="inline-flex items-center gap-1.5 bg-red-50 border border-red-300 text-red-700 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-red-100 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    دلیل رد متقاضی
+                </button>
+                @endif
+
                 {{-- ─── بازرسی (وضعیت: بازرسی) ─── --}}
                 @if ($req->status === SolarPlantRequestStatus::INSPECTION)
                 <a href="{{ route('solar-plant-requests.inspection.show', $req) }}"
@@ -283,6 +306,29 @@ $allSteps = array_values($stepsMap);
     @endif
 
 </main>
+
+{{-- ─── Modal دلیل رد پروژه توسط متقاضی ─── --}}
+<div id="rejectionModal"
+     class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6">
+        <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+            </div>
+            <h3 class="font-bold text-lg text-gray-800">دلیل رد پروژه توسط متقاضی</h3>
+        </div>
+        <p id="rejectionReasonText" class="text-gray-700 text-sm leading-relaxed bg-red-50 rounded-xl px-4 py-3 mb-5"></p>
+        <div class="flex gap-3 justify-end">
+            <button type="button"
+                    onclick="closeRejectionModal()"
+                    class="px-5 py-2.5 rounded-lg text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 transition">
+                بستن
+            </button>
+        </div>
+    </div>
+</div>
 
 {{-- ─── Modal تخصیص کارشناس ─── --}}
 <div id="expertModal"
@@ -326,6 +372,19 @@ $allSteps = array_values($stepsMap);
 </footer>
 
 <script>
+    function openRejectionModal(reason) {
+        document.getElementById('rejectionReasonText').textContent = reason || 'دلیلی ثبت نشده است.';
+        document.getElementById('rejectionModal').classList.remove('hidden');
+    }
+
+    function closeRejectionModal() {
+        document.getElementById('rejectionModal').classList.add('hidden');
+    }
+
+    document.getElementById('rejectionModal').addEventListener('click', function(e) {
+        if (e.target === this) closeRejectionModal();
+    });
+
     function openExpertModal(requestId, applicantName) {
         document.getElementById('expertModalDesc').textContent = 'متقاضی: ' + applicantName;
         document.getElementById('expertForm').action =

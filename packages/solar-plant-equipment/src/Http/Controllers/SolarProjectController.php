@@ -84,11 +84,30 @@ class SolarProjectController
             $validated['status'] = null;
         }
 
-        SolarProject::query()->create($validated);
+        $project = SolarProject::query()->create($validated);
+
+        // اگر این پروژه به یک تقاضا لینک دارد، وضعیت تقاضا را به "در انتظار تایید پروژه توسط متقاضی" تغییر بده
+        if (!empty($validated['request_id'])) {
+            $solarRequest = SolarPlantRequest::find($validated['request_id']);
+            if ($solarRequest) {
+                $allowedStatuses = [
+                    \SolarPlantRequests\Enums\SolarPlantRequestStatus::CONTRACTOR_ASSIGNED,
+                    \SolarPlantRequests\Enums\SolarPlantRequestStatus::AWAITING_PROJECT_APPROVAL,
+                ];
+                if (in_array($solarRequest->status, $allowedStatuses)) {
+                    $solarRequest->update([
+                        'project_approval_status'  => null,
+                        'project_rejection_reason' => null,
+                        'project_approved_at'      => null,
+                        'status'                   => \SolarPlantRequests\Enums\SolarPlantRequestStatus::AWAITING_PROJECT_APPROVAL,
+                    ]);
+                }
+            }
+        }
 
         return redirect()
             ->route('solar-plant-equipment.projects.index')
-            ->with('success', 'پروژه با موفقیت ثبت شد.');
+            ->with('success', 'پروژه با موفقیت ثبت شد و برای تایید به متقاضی ارسال گردید.');
     }
 
     public function show(SolarProject $project): View
@@ -131,9 +150,22 @@ class SolarProjectController
 
         $project->update($validated);
 
+        // اگر پروژه به تقاضایی لینک دارد و قبلاً رد شده بود، وضعیت تقاضا را مجدداً به "در انتظار تایید" بازگردان
+        if (!empty($validated['request_id'])) {
+            $solarRequest = SolarPlantRequest::find($validated['request_id']);
+            if ($solarRequest && $solarRequest->status === \SolarPlantRequests\Enums\SolarPlantRequestStatus::CONTRACTOR_ASSIGNED) {
+                $solarRequest->update([
+                    'project_approval_status'  => null,
+                    'project_rejection_reason' => null,
+                    'project_approved_at'      => null,
+                    'status'                   => \SolarPlantRequests\Enums\SolarPlantRequestStatus::AWAITING_PROJECT_APPROVAL,
+                ]);
+            }
+        }
+
         return redirect()
             ->route('solar-plant-equipment.projects.index')
-            ->with('success', 'پروژه با موفقیت ویرایش شد.');
+            ->with('success', 'پروژه با موفقیت ویرایش شد و مجدداً برای تایید ارسال گردید.');
     }
 
     /**

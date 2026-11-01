@@ -87,9 +87,10 @@ $stepsMap = [
     'package_selection'      => ['label' => 'انتخاب پکیج',         'icon' => '📦', 'step' => 4],
     'contractor_selection'   => ['label' => 'انتخاب پیمانکار',     'icon' => '👷', 'step' => 5],
     'contractor_assigned'    => ['label' => 'آماده پروژه',         'icon' => '📝', 'step' => 6],
-    'equipment_installation' => ['label' => 'نصب تجهیزات',         'icon' => '⚙️', 'step' => 7],
-    'inspection'             => ['label' => 'بازرسی',              'icon' => '🔎', 'step' => 8],
-    'certificate_issued'     => ['label' => 'صدور گواهی',          'icon' => '✅', 'step' => 9],
+    'awaiting_project_approval' => ['label' => 'تایید پروژه',      'icon' => '🏗️', 'step' => 7],
+    'equipment_installation' => ['label' => 'نصب تجهیزات',         'icon' => '⚙️', 'step' => 8],
+    'inspection'             => ['label' => 'بازرسی',              'icon' => '🔎', 'step' => 9],
+    'certificate_issued'     => ['label' => 'صدور گواهی',          'icon' => '✅', 'step' => 10],
 ];
 $allSteps = array_values($stepsMap);
 @endphp
@@ -292,6 +293,16 @@ $allSteps = array_values($stepsMap);
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
                     </svg>
                     انتخاب پیمانکار
+                </a>
+                @endif
+
+                @if ($req->status === SolarPlantRequestStatus::AWAITING_PROJECT_APPROVAL)
+                <a href="{{ route('solar-plant-requests.project-approval.show', $req) }}"
+                   class="inline-flex items-center gap-1.5 bg-teal-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-teal-700 transition animate-pulse">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
+                    </svg>
+                    بررسی و تایید پروژه
                 </a>
                 @endif
 

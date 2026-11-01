@@ -10,6 +10,7 @@ use SolarPlantRequests\Http\Controllers\Panel\CreateController;
 use SolarPlantRequests\Http\Controllers\Inverter\CreateController as InverterCreateController;
 use SolarPlantRequests\Http\Controllers\Battery\CreateController as BatteryCreateController;
 use SolarPlantRequests\Http\Controllers\SolarPlantRequestController;
+use SolarPlantRequests\Http\Controllers\ProjectApprovalController;
 use SolarPlantRequests\Http\Controllers\UserApprovalController;
 
 Route::middleware(['web', 'auth'])->prefix('solar-plant-requests')->name('solar-plant-requests.')->group(function () {
@@ -27,6 +28,11 @@ Route::middleware(['web', 'auth'])->prefix('solar-plant-requests')->name('solar-
     Route::post('{solarPlantRequest}/expert-report/approve',[UserApprovalController::class, 'approve'])->name('expert-report.approve');
     Route::post('{solarPlantRequest}/expert-report/reject', [UserApprovalController::class, 'reject'])->name('expert-report.reject');
 
+    // ─── تایید/رد پروژه توسط متقاضی ─────────────────────────────
+    Route::get('{solarPlantRequest}/project-approval',          [ProjectApprovalController::class, 'show'])->name('project-approval.show');
+    Route::post('{solarPlantRequest}/project-approval/approve', [ProjectApprovalController::class, 'approve'])->name('project-approval.approve');
+    Route::post('{solarPlantRequest}/project-approval/reject',  [ProjectApprovalController::class, 'reject'])->name('project-approval.reject');
+
     // ─── انتخاب پکیج ─────────────────────────────────────────────
     Route::get('{solarPlantRequest}/package-selection',     [PackageSelectionController::class, 'show'])->name('package-selection');
     Route::post('{solarPlantRequest}/package-selection',    [PackageSelectionController::class, 'store'])->name('package-selection.store');
@@ -39,6 +45,7 @@ Route::middleware(['web', 'auth'])->prefix('solar-plant-requests')->name('solar-
     Route::prefix('all-requests')->name('all-requests.')->group(function () {
         Route::get('/',                                          [AllSolarPlantRequestController::class, 'index'])->name('index');
         Route::post('{solarPlantRequest}/assign-contractor',     [AllSolarPlantRequestController::class, 'assignContractor'])->name('assign-contractor');
+        Route::post('{solarPlantRequest}/submit-project',        [AllSolarPlantRequestController::class, 'submitProject'])->name('submit-project');
     });
 
     // ─── پیمانکار ────────────────────────────────────────────────

@@ -47,10 +47,15 @@ class SolarPlantRequest extends Model
         'documents',
         'unique_code',
         'status',
-        // تایید متقاضی
+        // تایید متقاضی از گزارش کارشناسی
         'user_approval_status',
         'user_rejection_reason',
         'user_approved_at',
+        // جزئیات پروژه و تایید متقاضی از پروژه
+        'project_details',
+        'project_approval_status',
+        'project_rejection_reason',
+        'project_approved_at',
         // پکیج انتخابی
         'selected_package_id',
         'selected_package_price',
@@ -80,6 +85,8 @@ class SolarPlantRequest extends Model
         'documents'              => 'array',
         'selected_package_price' => 'integer',
         'user_approved_at'       => 'datetime',
+        'project_details'        => 'array',
+        'project_approved_at'    => 'datetime',
     ];
 
     protected $appends = ['status_label'];

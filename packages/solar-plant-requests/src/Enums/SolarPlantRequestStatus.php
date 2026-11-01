@@ -9,8 +9,9 @@ enum SolarPlantRequestStatus: string
     case AWAITING_USER_APPROVAL  = 'awaiting_user_approval';
     case PACKAGE_SELECTION       = 'package_selection';
     case CONTRACTOR_SELECTION    = 'contractor_selection';
-    case CONTRACTOR_ASSIGNED     = 'contractor_assigned';
-    case EQUIPMENT_INSTALLATION  = 'equipment_installation';
+    case CONTRACTOR_ASSIGNED         = 'contractor_assigned';
+    case AWAITING_PROJECT_APPROVAL   = 'awaiting_project_approval';
+    case EQUIPMENT_INSTALLATION      = 'equipment_installation';
     case INSPECTION              = 'inspection';
     case CERTIFICATE_ISSUED      = 'certificate_issued';
 
@@ -22,8 +23,9 @@ enum SolarPlantRequestStatus: string
             self::AWAITING_USER_APPROVAL => 'تایید گزارش کارشناسی',
             self::PACKAGE_SELECTION      => 'انتخاب پکیج',
             self::CONTRACTOR_SELECTION   => 'انتخاب پیمانکار',
-            self::CONTRACTOR_ASSIGNED    => 'آماده تعریف پروژه',
-            self::EQUIPMENT_INSTALLATION => 'نصب تجهیزات',
+            self::CONTRACTOR_ASSIGNED          => 'آماده تعریف پروژه',
+            self::AWAITING_PROJECT_APPROVAL    => 'تایید پروژه',
+            self::EQUIPMENT_INSTALLATION       => 'نصب تجهیزات',
             self::INSPECTION             => 'بازرسی و ثبت نتیجه',
             self::CERTIFICATE_ISSUED     => 'صدور گواهی',
         };
@@ -43,9 +45,10 @@ enum SolarPlantRequestStatus: string
             self::UNDER_REVIEW           => self::AWAITING_USER_APPROVAL,
             self::AWAITING_USER_APPROVAL => self::PACKAGE_SELECTION,
             self::PACKAGE_SELECTION      => self::CONTRACTOR_SELECTION,
-            self::CONTRACTOR_SELECTION   => self::CONTRACTOR_ASSIGNED,
-            self::CONTRACTOR_ASSIGNED    => self::EQUIPMENT_INSTALLATION,
-            self::EQUIPMENT_INSTALLATION => self::INSPECTION,
+            self::CONTRACTOR_SELECTION         => self::CONTRACTOR_ASSIGNED,
+            self::CONTRACTOR_ASSIGNED          => self::AWAITING_PROJECT_APPROVAL,
+            self::AWAITING_PROJECT_APPROVAL    => self::EQUIPMENT_INSTALLATION,
+            self::EQUIPMENT_INSTALLATION       => self::INSPECTION,
             self::INSPECTION             => self::CERTIFICATE_ISSUED,
             self::CERTIFICATE_ISSUED     => null,
         };
@@ -62,8 +65,9 @@ enum SolarPlantRequestStatus: string
             self::AWAITING_USER_APPROVAL => 'bg-indigo-100 text-indigo-700',
             self::PACKAGE_SELECTION      => 'bg-violet-100 text-violet-700',
             self::CONTRACTOR_SELECTION   => 'bg-purple-100 text-purple-700',
-            self::CONTRACTOR_ASSIGNED    => 'bg-fuchsia-100 text-fuchsia-700',
-            self::EQUIPMENT_INSTALLATION => 'bg-orange-100 text-orange-700',
+            self::CONTRACTOR_ASSIGNED          => 'bg-fuchsia-100 text-fuchsia-700',
+            self::AWAITING_PROJECT_APPROVAL    => 'bg-teal-100 text-teal-700',
+            self::EQUIPMENT_INSTALLATION       => 'bg-orange-100 text-orange-700',
             self::INSPECTION             => 'bg-yellow-100 text-yellow-700',
             self::CERTIFICATE_ISSUED     => 'bg-green-100 text-green-700',
         };
@@ -78,6 +82,7 @@ enum SolarPlantRequestStatus: string
             self::AWAITING_USER_APPROVAL,
             self::PACKAGE_SELECTION,
             self::CONTRACTOR_SELECTION,
+            self::AWAITING_PROJECT_APPROVAL,
         ]);
     }
 }

@@ -130,4 +130,86 @@ class AllSolarPlantRequestController
 
         return redirect()->route('solar-plant-requests.all-requests.index')->with('success', 'پیمانکار با موفقیت تخصیص شد.');
     }
+
+    /**
+     * ذخیره جزئیات پروژه توسط راهبر و ارسال برای تایید متقاضی
+     * فقط از وضعیت contractor_assigned امکان‌پذیر است
+     */
+    public function submitProject(Request $request, SolarPlantRequest $solarPlantRequest): RedirectResponse|JsonResponse
+    {
+        abort_unless(
+            SolarPlantRequest::userHasRole($request->user(), 'leader'),
+            403,
+            'فقط راهبر می‌تواند پروژه تعریف کند.'
+        );
+
+        abort_unless(
+            in_array($solarPlantRequest->status, [
+                SolarPlantRequestStatus::CONTRACTOR_ASSIGNED,
+                // اگر قبلاً رد شده و راهبر داره ویرایش می‌کند
+                SolarPlantRequestStatus::AWAITING_PROJECT_APPROVAL,
+            ]),
+            422,
+            'تعریف پروژه فقط در مرحله آماده تعریف پروژه امکان‌پذیر است.'
+        );
+
+        $validated = $request->validate([
+            'project_title'       => ['required', 'string', 'max:255'],
+            'project_start_date'  => ['nullable', 'string', 'max:20'],
+            'project_end_date'    => ['nullable', 'string', 'max:20'],
+            'project_cost'        => ['nullable', 'numeric', 'min:0'],
+            'project_description' => ['nullable', 'string', 'max:2000'],
+            'project_phases'      => ['nullable', 'string', 'max:2000'],
+        ], [
+            'project_title.required' => 'عنوان پروژه الزامی است.',
+        ]);
+
+        // ساخت آرایه جزئیات پروژه
+        $projectDetails = [
+            'title'       => $validated['project_title'],
+            'start_date'  => $validated['project_start_date'] ?? null,
+            'end_date'    => $validated['project_end_date'] ?? null,
+            'cost'        => $validated['project_cost'] ?? null,
+            'description' => $validated['project_description'] ?? null,
+            'phases'      => $validated['project_phases'] ?? null,
+            'submitted_at'=> now()->toDateTimeString(),
+            'submitted_by'=> $request->user()->name ?? $request->user()->id,
+        ];
+
+        $solarPlantRequest->update([
+            'project_details'          => $projectDetails,
+            'project_approval_status'  => null,
+            'project_rejection_reason' => null,
+            'project_approved_at'      => null,
+            'status'                   => SolarPlantRequestStatus::AWAITING_PROJECT_APPROVAL,
+        ]);
+
+        // ── ارسال SMS اطلاع‌رسانی به متقاضی ──────────────────────
+        // TODO: ارسال SMS اطلاع‌رسانی پروژه به متقاضی
+        // try {
+        //     $mobile = function_exists('convertPersianToEnglish')
+        //         ? convertPersianToEnglish($solarPlantRequest->mobile)
+        //         : $solarPlantRequest->mobile;
+        //
+        //     $message = "سامانه ساتا اصناف\nپروژه نیروگاه خورشیدی شما با کد {$solarPlantRequest->unique_code} آماده بررسی است. لطفاً وارد پنل کاربری شوید و پروژه را تایید یا رد کنید.";
+        //
+        //     if ($mobile) {
+        //         \Behin\Sms\Controllers\SmsController::send($mobile, $message);
+        //     }
+        // } catch (\Throwable $e) {
+        //     \Illuminate\Support\Facades\Log::warning('ارسال SMS پروژه ناموفق بود.', [
+        //         'request_id'  => $solarPlantRequest->id,
+        //         'unique_code' => $solarPlantRequest->unique_code,
+        //         'error'       => $e->getMessage(),
+        //     ]);
+        // }
+
+        if ($request->wantsJson()) {
+            return response()->json(['data' => $solarPlantRequest->fresh()]);
+        }
+
+        return redirect()
+            ->route('solar-plant-requests.all-requests.index')
+            ->with('success', 'جزئیات پروژه ذخیره شد و برای تایید به متقاضی ارسال گردید.');
+    }
 }
