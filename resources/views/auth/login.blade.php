@@ -173,7 +173,7 @@
                     <div class="sun-badge w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-lg flex-shrink-0">☀</div>
                 @endif
                 <div>
-                    <p class="text-white font-bold text-sm leading-tight">سامانه جامع انرژی‌های تجدیدپذیر</p>
+                    <p class="text-white font-bold text-sm leading-tight">سامانه جامع انرژی‌های تجدیدپذیر test</p>
                     <p class="text-amber-300 text-xs">اتحادیه کشوری سوخت‌های جایگزین</p>
                 </div>
             </div>
